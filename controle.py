@@ -1,6 +1,6 @@
-#Criação da classe CONTROLE
-from cliente import Cliente
-from pacote import Pacote
+#Criacao da classe CONTROLE
+from Cliente import Cliente
+from Pacote import Pacote
 from Tratamento import Tratamento
 
 class Controle:
@@ -27,3 +27,13 @@ class Controle:
 
         self.listaClientes.append(novo_cliente)
         
+    def listar_pacotes(self):
+        #sorted: organiza lista em ordem crescente pelo atributo total
+        pacotes_lucro = sorted(self.listaPacotes, key=lambda pacote: pacote.total)
+        
+        pacotes = ""
+        for i in range(len(pacotes_lucro)-1, -1, -1):
+            pacotes += pacotes_lucro[i].__str__() + "\n\n"
+    
+        return pacotes
+
