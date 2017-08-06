@@ -6,6 +6,7 @@ class Pacote:
 		self.tratamentos = tratamentos
 		self.lucro = 0.6 * total
 
+        #salva todos os __str__ dos tratamentos
 	def retornarTratamentos(self):
                 tratamentos = ""
                 for i in range(len(self.tratamentos)):
