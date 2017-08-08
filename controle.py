@@ -59,25 +59,19 @@ class Controle:
     def listar_lucro_mes(self):
         
         vendas = sorted(self.listaVendas, key=lambda venda: venda.data)
-        mes_anterior = 0
-        ano_anterior = 0
-        lucro_mes = 0
+        mes_anterior = vendas[0].data.month
+        ano_anterior = vendas[0].data.year
+        lucro_mes =  vendas[0].valorTotal * 0.6
         lucros = []
 
-        for i in range(len(vendas)):
+        for i in range(1, len(vendas)):
             mes_atual = vendas[i].data.month
             ano_atual = vendas[i].data.year
-            if i == 0:
                 
-                mes_anterior = mes_atual
-                ano_anterior = ano_atual
+            if ano_atual == ano_anterior and mes_atual == mes_anterior:
                 lucro_mes += vendas[i].valorTotal * 0.6
                 
-            elif ano_atual == ano_anterior and mes_atual == mes_anterior:
-                lucro_mes += vendas[i].valorTotal * 0.6
-                
-            else:
-                
+            else:  
                 lucros.append(lucro_mes)
                 lucro_mes = 0
 
@@ -94,4 +88,27 @@ class Controle:
         lucros.append(lucro_mes)
         return lucros        
             
+    def listar_lucro_ano(self):
+        vendas = sorted(self.listaVendas, key=lambda venda: venda.data)
+        ano_anterior = vendas[0].data.year
+        lucro_ano = vendas[0].valorTotal * 0.6
+        lucros = []
         
+        for i in range(len(vendas)):
+            ano_atual = vendas[i].data.year
+
+            if ano_atual == ano_anterior:
+                lucro_ano += vendas[i].valorTotal * 0.6
+            else:
+                lucros.append(lucro_ano)
+                lucros_ano = 0
+
+                diferenca_ano = ano_atual - ano_anterior
+
+                for j in range(diferenca_ano-1):
+                    lucros.append(0)
+
+                ano_anterior = vendas[i].data.year
+                lucro_ano = vendas[i].valorTotal * 0.6
+        lucros.append(lucro_ano)
+        return lucros
