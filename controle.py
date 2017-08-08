@@ -12,7 +12,7 @@ class Controle:
         self.listaClientes = []
         self.listaFuncionarios = []
         self.listaTratamentos = []
-        self.listaVendas = [ Venda(Cliente("aline", "123", "rua tal", "87", "aline@"), Pacote(200, Tratamento("tratamento 1 ", 200)), date(2017,3,15), 800), Venda(Cliente("aline", "123", "rua tal", "87", "aline@"), Pacote(200, Tratamento("tratamento 1 ", 200)), date(2017,1,15), 1000)]
+        self.listaVendas = []
         self.listaPacotes = []
 
     def cadastrar_tratamento(self, nome, valor):
@@ -28,6 +28,12 @@ class Controle:
         novo_cliente = Cliente(nome, cpf, endereco, telefone, email)
 
         self.listaClientes.append(novo_cliente)
+
+    def cadastrar_venda(self, cpf_cliente, Pacote, valorTotal):
+
+        nova_venda = Venda(cpf_cliente, Pacote, data, valorTotal)
+        
+        self.listaVendas.append(nova_venda)
         
     def listar_pacotes(self):
         #sorted: organiza lista em ordem crescente pelo atributo total
@@ -38,6 +44,16 @@ class Controle:
             pacotes += pacotes_lucro[i].__str__() + "\n\n"
     
         return pacotes
+
+    def listar_pacotes_cliente(self, cpf_cliente):
+        pacotes = []
+
+        for i in range(len(self.listaVendas)):
+            if self.listaVendas[i].cpf_cliente == cpf_cliente:
+                pacotes.append(self.listaVendas[i])
+
+        return pacotes
+
 
     #retorna uma lista com os lucros por mes, a partir do mes da primeira venda
     def listar_lucro_mes(self):
