@@ -18,31 +18,32 @@ class Controle:
         self.carregar_dados
 
     def carregar_dados(self):
-        handleClientes = open("dados\clientes.txt", "r")
-        handleFuncionarios = open("dados\funcionarios.txt", "r")
-        handleTratamentos = open("dados\tratamentos.txt", "r")
-        handleVendas = open("dados\vendas.txt", "r")
-        handlePacotes = open("dados\pacotes.txt", "r")
+        #as classes com composicao e listas, como ler?
+        handleClientes = open("dados\\clientes.txt", "r")
+        handleFuncionarios = open("dados\\funcionarios.txt", "r")
+        handleTratamentos = open("dados\\tratamentos.txt", "r")
+        handleVendas = open("dados\\vendas.txt", "r")
+        handlePacotes = open("dados\\pacotes.txt", "r")
         
         for line in handleClientes:
-            atributos = line.split(', ')
-            self.cadastrar_cliente(atributos[0], atributos[1], atributos[2], atributos[3], atributos[4])
+            attr = line.split(', ')
+            self.cadastrar_cliente(attr[0], attr[1], attr[2], attr[3], attr[4])
 
         for line in handleFuncionarios:
             atributos = line.split(', ')
-            self.cadastrar_funcionario(atributos[0], atributos[1], atributos[2], atributos[3], atributos[4], atributos[5], atributos[6], atributos[7])
+            self.cadastrar_funcionario(attr[0], attr[1], attr[2], attr[3], attr[4], attr[5], attr[6], attr[7])
 
         for line in handleTratamentos:
-            atributos = line.split(', ')
-            self.cadastrar_tratamento(atributos[0], atributos[1])
+            attr = line.split(', ')
+            self.cadastrar_tratamento(attr[0], attr[1])
 
         for line in handleVendas:
-            atributos = line.split(', ')
-            self.cadastrar_venda(atributos[0], atributos[1], atributos[2], atributos[3])
+            attr = line.split(', ')
+            self.cadastrar_venda(attr[0], attr[1], attr[2], attr[3])
 
         for line in handlePacotes:
-            atributos = line.split(', ')
-            self.cadastrar_pacote(atributos[0])
+            attr = line.split(', ')
+            self.cadastrar_pacote(attr[0])
             
         handleClientes.close()
         handleFuncionarios.close()
@@ -51,7 +52,54 @@ class Controle:
         handlePacotes.close()
         
     def salvar_dados(self):
-        handle = open("dados\clientes.txt", "w")
+        #as classes com composicao e listas, como armazenar?
+        handleClientes = open("dados\\clientes.txt", "w")
+        handleFuncionarios = open("dados\\funcionarios.txt", "w")
+        handleTratamentos = open("dados\\tratamentos.txt", "w")
+        handleVendas = open("dados\\vendas.txt", "w")
+        handlePacotes = open("dados\\pacotes.txt", "w")
+
+        cliente_string = ""
+        for i in range(len(self.listaClientes)):
+            c = self.listaClientes[i]
+            cliente_string += c.nome + ", " + c.cpf + ", "+ c.endereco + ", "+ c.telefone + ", " + c.email
+            cliente_string += "\n"
+            
+        func_string = ""
+        for i in range(len(self.listaFuncionarios)):
+            c = self.listaFuncionarios[i]
+            func_string += c.nome + ", " + c.cpf + ", "+ c.endereco + ", "+ c.telefone + ", " + c.dt_nasc + ", " + c.email + ", " + c.cargo + ", " + c.salario
+            func_string += "\n"
+            
+        tratamento_string = ""
+        for i in range(len(self.listaTratamentos)):
+            c = self.listaTratamentos[i]
+            tratamento_string += c.nome + ", " + c.valor
+            tratamento_string += "\n"
+            
+        venda_string = ""
+        for i in range(len(self.listaVendas)):
+            c = self.listaVendas[i]
+            venda_string += c.cliente + ", " + c.pacote + ", "+ c.data + ", "+ c.valorTotal
+            venda_string += "\n"
+            
+        pacote_string = ""
+        for i in range(len(self.listaPacotes)):
+            c = self.listaPacotes[i]
+            pacote_string += c.total + ", " + c.tratamentos
+            pacote_string += "\n"
+            
+        handleClientes.write(cliente_string)
+        handleFuncionarios.write(func_string)
+        handleTratamentos.write(tratamento_string)
+        handleVendas.write(venda_string)
+        handlePacotes.write(pacote_string)
+
+        handleClientes.close()
+        handleFuncionarios.close()
+        handleTratamentos.close()
+        handleVendas.close()
+        handlePacotes.close()
 
     def cadastrar_tratamento(self, nome, valor):
 
