@@ -1,8 +1,9 @@
 #Criacao da classe CONTROLE
-from cliente import Cliente
+from Cliente import Cliente
 from Pacote import Pacote
+from Venda import Venda
 from Tratamento import Tratamento
-from venda import Venda
+from datetime import date
 
 class Controle:
 
@@ -53,15 +54,61 @@ class Controle:
 
         return pacotes
 
-    
-        
-    def listar_pacotes(self):
-        #sorted: organiza lista em ordem crescente pelo atributo total
-        pacotes_lucro = sorted(self.listaPacotes, key=lambda pacote: pacote.total)
-        
-        pacotes = ""
-        for i in range(len(pacotes_lucro)-1, -1, -1):
-            pacotes += pacotes_lucro[i].__str__() + "\n\n"
-    
-        return pacotes
 
+    #retorna uma lista com os lucros por mes, a partir do mes da primeira venda
+    def listar_lucro_mes(self):
+        
+        vendas = sorted(self.listaVendas, key=lambda venda: venda.data)
+        mes_anterior = vendas[0].data.month
+        ano_anterior = vendas[0].data.year
+        lucro_mes =  vendas[0].valorTotal * 0.6
+        lucros = []
+
+        for i in range(1, len(vendas)):
+            mes_atual = vendas[i].data.month
+            ano_atual = vendas[i].data.year
+                
+            if ano_atual == ano_anterior and mes_atual == mes_anterior:
+                lucro_mes += vendas[i].valorTotal * 0.6
+                
+            else:  
+                lucros.append(lucro_mes)
+                lucro_mes = 0
+
+                diferenca_ano = ano_atual - ano_anterior
+                diferenca_mes = mes_atual - mes_anterior
+
+                for j in range((12 * diferenca_ano + diferenca_mes)-1):
+                    lucros.append(0)
+                
+                ano_anterior = vendas[i].data.year
+                mes_anterior = vendas[i].data.month
+                lucro_mes = vendas[i].valorTotal * 0.6
+                
+        lucros.append(lucro_mes)
+        return lucros        
+            
+    def listar_lucro_ano(self):
+        vendas = sorted(self.listaVendas, key=lambda venda: venda.data)
+        ano_anterior = vendas[0].data.year
+        lucro_ano = vendas[0].valorTotal * 0.6
+        lucros = []
+        
+        for i in range(len(vendas)):
+            ano_atual = vendas[i].data.year
+
+            if ano_atual == ano_anterior:
+                lucro_ano += vendas[i].valorTotal * 0.6
+            else:
+                lucros.append(lucro_ano)
+                lucros_ano = 0
+
+                diferenca_ano = ano_atual - ano_anterior
+
+                for j in range(diferenca_ano-1):
+                    lucros.append(0)
+
+                ano_anterior = vendas[i].data.year
+                lucro_ano = vendas[i].valorTotal * 0.6
+        lucros.append(lucro_ano)
+        return lucros
