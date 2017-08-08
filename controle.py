@@ -15,14 +15,51 @@ class Controle:
         self.listaTratamentos = []
         self.listaVendas = []
         self.listaPacotes = []
+        self.carregar_dados
+
+    def carregar_dados(self):
+        handleClientes = open("dados\clientes.txt", "r")
+        handleFuncionarios = open("dados\funcionarios.txt", "r")
+        handleTratamentos = open("dados\tratamentos.txt", "r")
+        handleVendas = open("dados\vendas.txt", "r")
+        handlePacotes = open("dados\pacotes.txt", "r")
+        
+        for line in handleClientes:
+            atributos = line.split(', ')
+            self.cadastrar_cliente(atributos[0], atributos[1], atributos[2], atributos[3], atributos[4])
+
+        for line in handleFuncionarios:
+            atributos = line.split(', ')
+            self.cadastrar_funcionario(atributos[0], atributos[1], atributos[2], atributos[3], atributos[4], atributos[5], atributos[6], atributos[7])
+
+        for line in handleTratamentos:
+            atributos = line.split(', ')
+            self.cadastrar_tratamento(atributos[0], atributos[1])
+
+        for line in handleVendas:
+            atributos = line.split(', ')
+            self.cadastrar_venda(atributos[0], atributos[1], atributos[2], atributos[3])
+
+        for line in handlePacotes:
+            atributos = line.split(', ')
+            self.cadastrar_pacote(atributos[0])
+            
+        handleClientes.close()
+        handleFuncionarios.close()
+        handleTratamentos.close()
+        handleVendas.close()
+        handlePacotes.close()
+        
+    def salvar_dados(self):
+        handle = open("dados\clientes.txt", "w")
 
     def cadastrar_tratamento(self, nome, valor):
 
         novo_tratamento = Tratamento(nome, valor)
         self.listaTratamentos.append(novo_tratamento)
 
-    def cadastrar_pacote(self, lista_Tramento):
-        self.listaPacotes.append(lista_Tramento)
+    def cadastrar_pacote(self, lista_Tratamento):
+        self.listaPacotes.append(lista_Tratamento)
 
     def cadastrar_cliente(self, nome, cpf, endereco, telefone, email):
 
