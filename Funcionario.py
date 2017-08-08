@@ -1,3 +1,4 @@
+from datetime import date
 class Funcionario:
 	
 	def __init__(self, nome, cpf, endereco, telefone, dt_nasc, email, cargo, salario):
@@ -10,3 +11,6 @@ class Funcionario:
 		self.email = email
 		self.cargo = cargo
 		self.salario = salario
+
+        def __str__(self):
+                return "Nome: " + self.nome + "\nCPF: " + self.cpf +"\nEndereco: " + self.endereco + "\nTelefone: " + self.telefone +"\nData de nascimento: " + self.dt_nasc.strftime('%d/%m/%Y') + "\nEmail: " + self.email +"\nCargo: " + self.cargo + "\nSalario: " + self.salario
