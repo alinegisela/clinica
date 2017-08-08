@@ -80,13 +80,18 @@ class Controle:
         venda_string = ""
         for i in range(len(self.listaVendas)):
             c = self.listaVendas[i]
-            venda_string += c.cliente + ", " + c.pacote + ", "+ c.data + ", "+ c.valorTotal
+            venda_string += c.cliente.cpf + ", " + c.pacote.id + ", "+ c.data + ", "+ c.valorTotal
             venda_string += "\n"
             
         pacote_string = ""
         for i in range(len(self.listaPacotes)):
             c = self.listaPacotes[i]
-            pacote_string += c.total + ", " + c.tratamentos
+            
+			t = ""
+			for k in range(self.listaPacotes.tratamentos):
+				t += self.listaPacotes.tratamentos[k].id+"/ "
+			
+			pacote_string += c.total + ", " + t
             pacote_string += "\n"
             
         handleClientes.write(cliente_string)
@@ -106,8 +111,8 @@ class Controle:
         novo_tratamento = Tratamento(nome, valor)
         self.listaTratamentos.append(novo_tratamento)
 
-    def cadastrar_pacote(self, lista_Tratamento):
-        self.listaPacotes.append(lista_Tratamento)
+    def cadastrar_pacote(self, id, total, lista_Tratamento):
+        self.listaPacotes.append(id, total, lista_Tratamento)
 
     def cadastrar_cliente(self, nome, cpf, endereco, telefone, email):
 
@@ -115,9 +120,9 @@ class Controle:
 
         self.listaClientes.append(novo_cliente)
 
-    def cadastrar_venda(self, cpf_cliente, Pacote, valorTotal):
+    def cadastrar_venda(self, Cliente, Pacote, data, valorTotal):
 
-        nova_venda = Venda(cpf_cliente, Pacote, data, valorTotal)
+        nova_venda = Venda(Cliente, Pacote, data, valorTotal)
         
         self.listaVendas.append(nova_venda)
         
@@ -203,8 +208,7 @@ class Controle:
     def cadastrar_funcionario(self, nome, cpf, end, tel, dt_nasc, email, cargo, salario):
         novo_funcionario = Funcionario(nome, cpf, end, tel, dt_nasc, email, cargo, salario)
         self.listaFuncionarios.append(novo_funcionario)
-        print id(self.listaFuncionarios)
-        return self.listaFuncionarios
+       
     def retornar_funcionario(self, cpf):
         
         for i in range(len(self.listaFuncionarios)):
