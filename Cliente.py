@@ -10,4 +10,7 @@ class Cliente:
         self.telefone = telefone
         self.email = email
 
+    def __str__ (self):
+        return 'Nome: '+self.nome+' cpf: '+self.cpf+' endereco: '+self.endereco+' fone: '+self.telefone+' email: '+self.email
+
     

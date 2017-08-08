@@ -1,6 +1,6 @@
 #Classe Venda
 from cliente import Cliente
-from pacote import Pacote
+from Pacote import Pacote
 
 class Venda:
 
