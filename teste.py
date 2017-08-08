@@ -29,6 +29,11 @@ class Teste:
                     valor = raw_input('valor')
 
                     controle.cadastrar_tratamento(nome, valor)
+
+                elif opcao == 3:
+                    
+
+                    controle.cadastrar_pacote()
                     
                 elif opcao == 7:
                     lista = controle.listaClientes
