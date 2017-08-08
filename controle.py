@@ -55,3 +55,13 @@ class Controle:
 
     
         
+    def listar_pacotes(self):
+        #sorted: organiza lista em ordem crescente pelo atributo total
+        pacotes_lucro = sorted(self.listaPacotes, key=lambda pacote: pacote.total)
+        
+        pacotes = ""
+        for i in range(len(pacotes_lucro)-1, -1, -1):
+            pacotes += pacotes_lucro[i].__str__() + "\n\n"
+    
+        return pacotes
+
