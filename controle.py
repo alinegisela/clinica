@@ -3,6 +3,7 @@ from Cliente import Cliente
 from Pacote import Pacote
 from Venda import Venda
 from Tratamento import Tratamento
+from Funcionario import Funcionario
 from datetime import date
 
 class Controle:
@@ -112,3 +113,31 @@ class Controle:
                 lucro_ano = vendas[i].valorTotal * 0.6
         lucros.append(lucro_ano)
         return lucros
+
+     #crud funcionarios
+    def cadastrar_funcionario(self, nome, cpf, end, tel, dt_nasc, email, cargo, salario):
+        novo_funcionario = Funcionario(nome, cpf, end, tel, dt_nasc, email, cargo, salario)
+        self.listaFuncionarios.append(novo_funcionario)
+        print id(self.listaFuncionarios)
+        return self.listaFuncionarios
+    def retornar_funcionario(self, cpf):
+        
+        for i in range(len(self.listaFuncionarios)):
+            if self.listaFuncionarios[i].cpf == cpf:
+                funcionario = self.listaFuncionarios[i]
+                return funcionario
+            
+    def atualizar_funcionario(self, nome, cpf, end, tel, dt_nasc, email, cargo, salario):
+        funcionario = self.retornar_funcionario(cpf)
+        funcionario.nome = nome
+        funcionario.endereco = end
+        funcionario.telefone = tel
+        funcionario.dt_nasc = dt_nasc
+        funcionario.email = email
+        funcionario.cargo = cargo
+        funcionario.salario = salario
+        
+    def deletar_funcionario(self, cpf):
+        funcionario = self.retornar_funcionario(cpf)
+        self.listaFuncionarios.remove(funcionario)
+        
