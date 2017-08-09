@@ -3,7 +3,7 @@ class Pacote:
 	def __init__(self, id, total, tratamentos):
 		self.id = id
 		self.total = total
-		self.tratamentos[] = tratamentos
+		self.tratamentos = tratamentos
 		self.lucro = 0.6 * total
 
         #salva todos os __str__ dos tratamentos

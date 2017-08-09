@@ -1,11 +1,11 @@
 #Classe Venda
-from Cliente import Cliente
+from cliente import Cliente
 from Pacote import Pacote
 
 class Venda:
 
     def __init__(self, id, cliente, pacote, data, valorTotal):
-		self.id = id
+	self.id = id
         self.cliente  = Cliente
         self.pacote = Pacote
         self.data = data

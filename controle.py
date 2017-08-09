@@ -1,5 +1,5 @@
 #Criacao da classe CONTROLE
-from Cliente import Cliente
+from cliente import Cliente
 from Pacote import Pacote
 from Venda import Venda
 from Tratamento import Tratamento
@@ -84,14 +84,14 @@ class Controle:
             venda_string += "\n"
             
         pacote_string = ""
+		
         for i in range(len(self.listaPacotes)):
             c = self.listaPacotes[i]
-            
-			t = ""
-			for k in range(self.listaPacotes.tratamentos):
-				t += self.listaPacotes.tratamentos[k].id+"/ "
-			
-			pacote_string += c.total + ", " + t
+	    t = ""
+	    for k in range(self.listaPacotes.tratamentos):
+		t += self.listaPacotes.tratamentos[k].id+"/ "
+				
+	    pacote_string += c.total + ", " + t
             pacote_string += "\n"
             
         handleClientes.write(cliente_string)
