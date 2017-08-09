@@ -87,11 +87,11 @@ class Controle:
         for i in range(len(self.listaPacotes)):
             c = self.listaPacotes[i]
             
-			t = ""
-			for k in range(self.listaPacotes.tratamentos):
-				t += self.listaPacotes.tratamentos[k].id+"/ "
+	    t = ""
+            for k in range(self.listaPacotes.tratamentos):
+	    	t += self.listaPacotes.tratamentos[k].id+"/ "
 			
-			pacote_string += c.total + ", " + t
+            pacote_string += c.total + ", " + t
             pacote_string += "\n"
             
         handleClientes.write(cliente_string)
