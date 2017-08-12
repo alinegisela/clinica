@@ -87,11 +87,20 @@ class Controle:
 		
         for i in range(len(self.listaPacotes)):
             c = self.listaPacotes[i]
+<<<<<<< HEAD
 	    t = ""
 	    for k in range(self.listaPacotes.tratamentos):
 		t += self.listaPacotes.tratamentos[k].id+"/ "
 				
 	    pacote_string += c.total + ", " + t
+=======
+            
+	    t = ""
+            for k in range(self.listaPacotes.tratamentos):
+	    	t += self.listaPacotes.tratamentos[k].id+"/ "
+			
+            pacote_string += c.total + ", " + t
+>>>>>>> ea468f8b2527449f44cee3cb625113d709d6afa7
             pacote_string += "\n"
             
         handleClientes.write(cliente_string)
@@ -119,6 +128,24 @@ class Controle:
         novo_cliente = Cliente(nome, cpf, endereco, telefone, email)
 
         self.listaClientes.append(novo_cliente)
+
+    def retornar_cliente(self, cpf):
+        
+        for i in range(len(self.listaClientes)):
+            if self.listaClientes[i].cpf == cpf:
+                cliente = self.listaClientes[i]
+                return cliente
+            
+    def atualizar_cliente(self, nome, cpf, end, tel, email):
+        cliente = self.retornar_funcionario(cpf)
+        cliente.nome = nome
+        cliente.endereco = end
+        cliente.telefone = tel
+        cliente.email = email
+
+    def deletar_cliente(self, cpf):
+        cliente = self.retornar_cliente(cpf)
+        self.listaClientes.remove(cliente)
 
     def cadastrar_venda(self, Cliente, Pacote, data, valorTotal):
 
