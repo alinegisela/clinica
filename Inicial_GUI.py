@@ -5,13 +5,16 @@ janela = Tk()
 
 def cadastro_cliente():
     print 'chegou aqui'
+
+def cadastro_tratamento():
+    print 'chegou'
     
     
 b1= Button(janela, width=20, text="Cadastrar Cliente", command=cadastro_cliente)
 b1.place(x=10, y=30)
 
-b1= Button(janela, width=30, text="Cadastrar pacote Tratamento", command=cadastro_cliente)
-b1.place(x=200, y=30)
+b2= Button(janela, width=30, text="Cadastrar Tratamento", command=cadastro_tratamento)
+b2.place(x=200, y=30)
 
 b1= Button(janela, width=20, text="Cadastrar Venda", command=cadastro_cliente)
 b1.place(x=10, y=80)
