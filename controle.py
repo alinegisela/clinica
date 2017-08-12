@@ -120,6 +120,24 @@ class Controle:
 
         self.listaClientes.append(novo_cliente)
 
+    def retornar_cliente(self, cpf):
+        
+        for i in range(len(self.listaClientes)):
+            if self.listaClientes[i].cpf == cpf:
+                cliente = self.listaClientes[i]
+                return cliente
+            
+    def atualizar_cliente(self, nome, cpf, end, tel, email):
+        cliente = self.retornar_funcionario(cpf)
+        cliente.nome = nome
+        cliente.endereco = end
+        cliente.telefone = tel
+        cliente.email = email
+
+    def deletar_cliente(self, cpf):
+        cliente = self.retornar_cliente(cpf)
+        self.listaClientes.remove(cliente)
+
     def cadastrar_venda(self, Cliente, Pacote, data, valorTotal):
 
         nova_venda = Venda(Cliente, Pacote, data, valorTotal)
