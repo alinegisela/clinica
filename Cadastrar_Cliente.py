@@ -3,10 +3,8 @@ from controle import Controle
 
 janela = Tk()
 
-def cadastro_cliente():
-    print 'chegou aqui'
-    
 controle = Controle()
+
 nome = Label(janela, text='Nome')
 nome_input = Entry(janela)
 cpf = Label(janela, text='Cpf')
@@ -33,12 +31,8 @@ email_input.grid(row=5, column=1)
 print type(nome_input)
 print type(str(nome_input))
 
-b = Button(janela, text='aaa', command=controle.cadastrar_cliente)
-b.grid(row=6)
-
-
-b1= Button(janela, width=20, text="Lista de pacotes por cliente", command=cadastro_cliente)
-b1.place(x=10, y=130)
+b = Button(janela, text='Cadastrar cliente', command=controle.cadastrar_cliente)
+b.grid(row=6, column=1)
 
 
 
