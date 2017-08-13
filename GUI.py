@@ -18,32 +18,37 @@ class SampleApp(tk.Frame):
         janela.title("Clinica Sinta-se Bem")
         janela.geometry("500x400")
         #janela.configure(backgr.grid_bg='Beige'
-        self.menu = Menu_(self.root, self)
+        #self.menu = Menu_(self.root, self)
 
         self.frames = {}
         for F in (Cadastrar_cliente, StartPage, Atualizar_cliente, Retornar_cliente, Deletar_cliente, Login):
             page_name = F.__name__
-            frame = F(parent=container, controller=self)
+            frame = F(parent=container, controller=self, root=self.root)
             self.frames[page_name] = frame
 
             # put all of the pages in the same location;
             # the one on the top of the stacking order
             # will be the one that is visible.
             frame.grid(row=0, column=0, sticky="nsew")
-           
 
+      
         self.show_frame("Login")
 
     def show_frame(self, page_name):
         '''Show a frame for the given page name'''
         frame = self.frames[page_name]
+        frame.update()
         frame.tkraise()
 
 class StartPage(tk.Frame):
 
-    def __init__(self, parent, controller):
+    def __init__(self, parent, controller, root):
         tk.Frame.__init__(self, parent)
         self.controller = controller
+        self.root = root
+
+        
+        
         label = tk.Label(self, text="Teste")
         label.pack(side="top", fill="x", pady=10)
 
@@ -54,11 +59,15 @@ class StartPage(tk.Frame):
         button1.pack()
         button2.pack()
 
+    def update(self):
+        self.menu = Menu_(self.root, self.controller)
+
 class Cadastrar_cliente(tk.Frame):
 
-    def __init__(self, parent, controller):
+    def __init__(self, parent, controller, root):
         tk.Frame.__init__(self, parent)
         self.controller = controller
+        self.root = root
 
         self.controle = Controle()
 
@@ -108,11 +117,15 @@ class Cadastrar_cliente(tk.Frame):
 
 class Login(tk.Frame):
 
-    def __init__(self, parent, controller):
+    def __init__(self, parent, controller, root):
         tk.Frame.__init__(self, parent)
         self.controller = controller
+        self.root = root
 
         self.controle = Controle()
+
+        root.config(menu=tk.Menu(root))
+        #self.menu = Menu_(self.root, self)
 
         self.usuario = tk.Label(self, text='Usuario: ')
         self.usuario_str = tk.StringVar()
@@ -141,9 +154,10 @@ class Login(tk.Frame):
 
 class Atualizar_cliente(tk.Frame):
 
-    def __init__(self, parent, controller):
+    def __init__(self, parent, controller, root):
         tk.Frame.__init__(self, parent)
         self.controller = controller
+        self.root = root
 
         self.controle = Controle()
 
@@ -193,11 +207,13 @@ global cpf
 cpf = 'a'
 class Retornar_cliente(tk.Frame):
 
-    def __init__(self, parent, controller):
+    def __init__(self, parent, controller, root):
         tk.Frame.__init__(self, parent)
         self.controller = controller
+        self.root = root
 
-        #self.menu = Menu_(janela)
+        
+        self.menu = Menu_(self.root, self.controller)
 
         self.controle = Controle()
         self.cliente = self.controle.retornar_cliente( cpf)
@@ -242,11 +258,14 @@ class Retornar_cliente(tk.Frame):
 
 class Deletar_cliente(tk.Frame):
 
-    def __init__(self, parent, controller):
+    def __init__(self, parent, controller, root):
         tk.Frame.__init__(self, parent)
         self.controller = controller
+        self.root = root
 
         self.controle = Controle()
+
+        #self.menu = Menu_(self.root, self)
 
         self.texto = tk.Label(self, text='Digite o Cpf do cliente')
 
@@ -273,11 +292,12 @@ class Menu_(tk.Frame):
     def theend():
         global janela
         janela.destroy()
-
+    
 
     #MENU
     
     def __init__(self, master, controller):
+       
         tk.Frame.__init__(self, master)
         self.controller = controller
 
@@ -295,6 +315,9 @@ class Menu_(tk.Frame):
         subMenu.add_command(label='Editar projeto')
         subMenu.add_separator()
         subMenu.add_command(label='Sair',command=self.theend)
+
+    def remove(self):
+        empty = tk.Menu(master)
 
     def mudar_pag(self, nome_pag, master):
         g.nome_pag(master, "Cadastrar_cliente")
