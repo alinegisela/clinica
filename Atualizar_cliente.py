@@ -1,7 +1,7 @@
 from Tkinter import *
 from controle import Controle
 
-class Cadastrar_cliente:
+class Atualizar_cliente:
 
     def __init__(self, master):
         
@@ -15,7 +15,6 @@ class Cadastrar_cliente:
         self.cpf = Label(janela, text='Cpf')
         self.cpf_str = StringVar()
         self.cpf_input = Entry(janela, textvariable = self.cpf_str)
-
 
         self.endereco = Label(janela, text='Endereco')
         self.endereco_str = StringVar()
@@ -41,17 +40,18 @@ class Cadastrar_cliente:
         self.email_input.grid(row=5, column=1)
         
         
-        self.b = Button(janela, text='Cadastrar cliente', command=self.tal)
+        self.b = Button(janela, text='Atualizar dados do cliente', command=self.acao)
         self.b.grid(row=6, column=1)
         
         
         
-    def tal(self):
-        self.controle.cadastrar_cliente(self.nome_str.get(), self.cpf_str.get(), self.endereco_str.get(), self.telefone_str.get(), self.email_str.get() )
+    def acao(self):
         print self.controle.listaClientes[0]
+        self.controle.atualizar_cliente(self.nome_str.get(), self.cpf_str.get(), self.endereco_str.get(), self.telefone_str.get(), self.email_str.get() )
+        print self.controle.listaClientes[0]  
 
 janela = Tk()
-p = Cadastrar_cliente(janela)
+p = Atualizar_cliente(janela)
 janela.title("Clinica Sinta-se Bem")
 janela.geometry("500x400")
 janela.configure(background='Beige') 
