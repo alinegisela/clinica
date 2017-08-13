@@ -250,3 +250,8 @@ class Controle:
         funcionario = self.retornar_funcionario(cpf)
         self.listaFuncionarios.remove(funcionario)
         
+    def retorna_funcionarios(self):
+        self.lista = []
+        for i in range(len(self.listaFuncionarios)):
+            self.lista.append(self.listaFuncionarios[i][0])
+        return self.lista
