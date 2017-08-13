@@ -13,4 +13,4 @@ class Funcionario:
 		self.salario = salario
 
         def __str__(self):
-                return "Nome: " + self.nome + "\nCPF: " + self.cpf 
+                return "Nome: " + self.nome + "   \nCPF: " + self.cpf+"  \nEndereco: "+self.endereco+"  \ntelefone: "+self.telefone+"  \ndt_nasc: "+self.dt_nasc+"  \nemail: "+self.email+"  \ncargo: "+self.cargo+"  \nsalario: "+self.salario
