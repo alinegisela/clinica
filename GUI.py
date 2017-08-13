@@ -5,6 +5,7 @@ class SampleApp(tk.Frame):
 
     def __init__(self,janela ,*args, **kwargs):
         tk.Frame.__init__(self,janela, *args, **kwargs)
+        self.root  = janela
 
         # the container is where we'll stack a bunch of frames
         # on top of each other, then the one we want visible
@@ -17,6 +18,7 @@ class SampleApp(tk.Frame):
         janela.title("Clinica Sinta-se Bem")
         janela.geometry("500x400")
         #janela.configure(backgr.grid_bg='Beige'
+        self.menu = Menu_(self.root, self)
 
         self.frames = {}
         for F in (Cadastrar_cliente, StartPage, Atualizar_cliente, Retornar_cliente, Deletar_cliente, Login):
@@ -59,6 +61,8 @@ class Cadastrar_cliente(tk.Frame):
         self.controller = controller
 
         self.controle = Controle()
+
+        
 
         self.nome = tk.Label(self, text='Nome')
         self.nome_str = tk.StringVar()
@@ -133,7 +137,7 @@ class Login(tk.Frame):
     def acao(self):
         validar = self.controle.login(self.usuario_str.get(), self.senha_str.get())
         if validar == True:
-            controller.showFrame("StartPage")
+            self.controller.show_frame("StartPage")
 
 class Atualizar_cliente(tk.Frame):
 
@@ -263,7 +267,37 @@ class Deletar_cliente(tk.Frame):
        
         self.controle.deletar_cliente(self.cpf_str.get() )
         
- 
+
+class Menu_(tk.Frame):
+  
+    def theend():
+        global janela
+        janela.destroy()
+
+
+    #MENU
+    
+    def __init__(self, master, controller):
+        tk.Frame.__init__(self, master)
+        self.controller = controller
+
+        self.controle = Controle()
+
+      
+        self.menu = tk.Menu(master)
+        master.config(menu=self.menu)
+        master.title('')
+
+        subMenu = tk.Menu(self.menu)
+    
+        self.menu.add_cascade(label='Cliente', menu=subMenu)
+        subMenu.add_command(label='Novo projeto', command=lambda : controller.show_frame("Cadastrar_cliente"))
+        subMenu.add_command(label='Editar projeto')
+        subMenu.add_separator()
+        subMenu.add_command(label='Sair',command=self.theend)
+
+    def mudar_pag(self, nome_pag, master):
+        g.nome_pag(master, "Cadastrar_cliente")
 if __name__ == "__main__":
     janela = tk.Tk()
     app = SampleApp(janela)
