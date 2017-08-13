@@ -6,8 +6,6 @@ class SampleApp(tk.Frame):
     def __init__(self,janela ,*args, **kwargs):
         tk.Frame.__init__(self,janela, *args, **kwargs)
 
-        #self.title_font = tkfont.Font(family='Helvetica', size=18, weight="bold", slant="italic")
-
         # the container is where we'll stack a bunch of frames
         # on top of each other, then the one we want visible
         # will be raised above the others
@@ -21,7 +19,7 @@ class SampleApp(tk.Frame):
         #janela.configure(backgr.grid_bg='Beige'
 
         self.frames = {}
-        for F in (Cadastrar_cliente, StartPage, Atualizar_cliente, Retornar_cliente):
+        for F in (Cadastrar_cliente, StartPage, Atualizar_cliente, Retornar_cliente, Deletar_cliente, Login):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             self.frames[page_name] = frame
@@ -32,7 +30,7 @@ class SampleApp(tk.Frame):
             frame.grid(row=0, column=0, sticky="nsew")
            
 
-        self.show_frame("StartPage")
+        self.show_frame("Login")
 
     def show_frame(self, page_name):
         '''Show a frame for the given page name'''
@@ -48,7 +46,7 @@ class StartPage(tk.Frame):
         label.pack(side="top", fill="x", pady=10)
 
         button1 = tk.Button(self, text="Mostrar cliente",
-                            command=lambda: controller.show_frame("Retornar_cliente"))
+                            command=lambda: controller.show_frame("Deletar_cliente"))
         button2 = tk.Button(self, text="Cadastrar cliente",
                             command=lambda: controller.show_frame("Atualizar_cliente"))
         button1.pack()
@@ -102,6 +100,40 @@ class Cadastrar_cliente(tk.Frame):
         
     def acao(self):
         self.controle.cadastrar_cliente(self.nome_str.get(), self.cpf_str.get(), self.endereco_str.get(), self.telefone_str.get(), self.email_str.get() )
+
+
+class Login(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+
+        self.controle = Controle()
+
+        self.usuario = tk.Label(self, text='Usuario: ')
+        self.usuario_str = tk.StringVar()
+        self.usuario_input = tk.Entry(self, textvariable = self.usuario_str)
+
+        self.senha = tk.Label(self, text='Senha: ')
+        self.senha_str = tk.StringVar()
+        self.senha_input = tk.Entry(self, textvariable = self.senha_str)
+
+
+        self.usuario.grid(row=1)
+        self.usuario_input.grid(row=1, column=1)
+        self.senha.grid(row=2)
+        self.senha_input.grid(row=2, column=1)
+        
+        
+        self.b = tk.Button(self, text='Enviar', command=self.acao)
+        self.b.grid(row=6, column=1)
+        
+        
+    #add o else
+    def acao(self):
+        validar = self.controle.login(self.usuario_str.get(), self.senha_str.get())
+        if validar == True:
+            controller.showFrame("StartPage")
 
 class Atualizar_cliente(tk.Frame):
 
@@ -204,7 +236,34 @@ class Retornar_cliente(tk.Frame):
     def acao(self):
         self.controle.retornar_cliente(self.cpf_input.get())
 
-      
+class Deletar_cliente(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+
+        self.controle = Controle()
+
+        self.texto = tk.Label(self, text='Digite o Cpf do cliente')
+
+        self.cpf = tk.Label(self, text='Cpf')
+        self.cpf_str = tk.StringVar()
+        self.cpf_input = tk.Entry(self, textvariable = self.cpf_str)
+
+        self.texto.grid(row=1)
+        self.cpf.grid(row=2, column=0)
+        self.cpf_input.grid(row=2, column=1)
+              
+        self.b = tk.Button(self, text='Deletar todos os dados do cliente', command=self.acao)
+        self.b.grid(row=3, column=1)
+        
+        
+        
+    def acao(self):
+       
+        self.controle.deletar_cliente(self.cpf_str.get() )
+        
+ 
 if __name__ == "__main__":
     janela = tk.Tk()
     app = SampleApp(janela)

@@ -4,6 +4,7 @@ from Pacote import Pacote
 from Venda import Venda
 from Tratamento import Tratamento
 from Funcionario import Funcionario
+from login import Login
 from datetime import date
 
 class Controle:
@@ -15,6 +16,7 @@ class Controle:
         self.listaTratamentos = []
         self.listaVendas = []
         self.listaPacotes = []
+        self.listaLogin = []
         self.carregar_dados()
 
     def carregar_dados(self):
@@ -24,6 +26,7 @@ class Controle:
         handleTratamentos = open("dados\\tratamentos.txt", "r")
         handleVendas = open("dados\\vendas.txt", "r")
         handlePacotes = open("dados\\pacotes.txt", "r")
+        handleLogin = open("dados\\login.txt", "r")
         
         for line in handleClientes:
             attr = line.split(', ')
@@ -31,7 +34,7 @@ class Controle:
 
         for line in handleFuncionarios:
             atributos = line.split(', ')
-            self.cadastrar_funcionario(attr[0], attr[1], attr[2], attr[3], attr[4], attr[5], attr[6], attr[7])
+            self.cadastrar_funcionario(attr[0], attr[1], attr[2], attr[3], attr[4], attr[5], attr[6], attr[7], attr[8])
 
         for line in handleTratamentos:
             attr = line.split(', ')
@@ -44,12 +47,17 @@ class Controle:
         for line in handlePacotes:
             attr = line.split(', ')
             self.cadastrar_pacote(attr[0])
+
+        for line in handleLogin:
+            attr = line.split(', ')
+            self.cadastrar_login(attr[0], attr[1])
             
         handleClientes.close()
         handleFuncionarios.close()
         handleTratamentos.close()
         handleVendas.close()
         handlePacotes.close()
+        handleLogin.close()
         
     def salvar_dados(self):
         #as classes com composicao e listas, como armazenar?
@@ -58,6 +66,7 @@ class Controle:
         handleTratamentos = open("dados\\tratamentos.txt", "w")
         handleVendas = open("dados\\vendas.txt", "w")
         handlePacotes = open("dados\\pacotes.txt", "w")
+        handleLogin = open("dados\\login.txt", "w")
 
         cliente_string = ""
         for i in range(len(self.listaClientes)):
@@ -93,18 +102,26 @@ class Controle:
 			
             pacote_string += c.total + ", " + t
             pacote_string += "\n"
+
+        cliente_string = ""
+        for i in range(len(self.listaLogin)):
+            c = self.listaLogin[i]
+            cliente_string += c.usuario + ", " + c.senha
+            cliente_string += "\n"
             
         handleClientes.write(cliente_string)
         handleFuncionarios.write(func_string)
         handleTratamentos.write(tratamento_string)
         handleVendas.write(venda_string)
         handlePacotes.write(pacote_string)
+        handleCliente.write(cliente_string)
 
         handleClientes.close()
         handleFuncionarios.close()
         handleTratamentos.close()
         handleVendas.close()
         handlePacotes.close()
+        handleCliente.close()
 
     def cadastrar_tratamento(self, nome, valor):
 
@@ -224,9 +241,11 @@ class Controle:
         return lucros
 
      #crud funcionarios
-    def cadastrar_funcionario(self, nome, cpf, end, tel, dt_nasc, email, cargo, salario):
+    def cadastrar_funcionario(self, nome, cpf, end, tel, dt_nasc, email, cargo, salario, senha):
         novo_funcionario = Funcionario(nome, cpf, end, tel, dt_nasc, email, cargo, salario)
+        novo_login = Login(cpf, senha)
         self.listaFuncionarios.append(novo_funcionario)
+        self.listaLogin.append(novo_login)
        
     def retornar_funcionario(self, cpf):
         
@@ -248,5 +267,19 @@ class Controle:
     def deletar_funcionario(self, cpf):
         funcionario = self.retornar_funcionario(cpf)
         self.listaFuncionarios.remove(funcionario)
+
+    def cadastrar_login(self, usuario, senha):
+        novo_login = Login(usuario, senha)
+        self.listaLogin.append(novo_login)
+
+    def login(self, usuario, senha):
+        validar = False
+        for i in range(len(self.listaFuncionarios)):
+            if self.listaFuncionarios[i].cpf == usuario:
+                for j in range(self.listaLogin):
+                    if self.listaLogin[j].usuario == usuario:
+                        if self.listaLogin[j].senha == senha:
+                            validar = True
         
 
+        return validar
