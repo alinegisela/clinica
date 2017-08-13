@@ -237,7 +237,6 @@ class Controle:
             
     def atualizar_funcionario(self, nome, cpf, end, tel, dt_nasc, email, cargo, salario):
         funcionario = self.retornar_funcionario(cpf)
-        print funcionario
         funcionario.nome = nome
         funcionario.endereco = end
         funcionario.telefone = tel
