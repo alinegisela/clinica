@@ -9,19 +9,19 @@ class Crud_Funcionario:
         self.labelname= Label(self.frame, text='Nome')
         self.labelname.place(x=0,y=30)
         self.name_str= StringVar()
-        self.entryname= Entry(self.frame, textvariable= self.name_str, width=22)
+        self.entryname= Entry(self.frame, textvariable= self.name_str, width=50)
         self.entryname.place(x=50,y=30)
 
         self.labelcpf= Label(self.frame, text='Cpf')
         self.labelcpf.place(x=0,y=60)
         self.cpf_str= StringVar()
-        self.entrycpf= Entry(self.frame, textvariable= self.cpf_str, width=22)
+        self.entrycpf= Entry(self.frame, textvariable= self.cpf_str, width=50)
         self.entrycpf.place(x=50,y=60)
 
         self.labelendereco= Label(self.frame, text='Endereco')
         self.labelendereco.place(x=0,y=90)
         self.endereco_str= StringVar()
-        self.entryendereco= Entry(self.frame, textvariable= self.endereco_str, width=22)
+        self.entryendereco= Entry(self.frame, textvariable= self.endereco_str, width=50)
         self.entryendereco.place(x=50,y=90)
 
         self.labeltelefone= Label(self.frame, text='Telefone')
@@ -51,29 +51,24 @@ class Crud_Funcionario:
         self.labelemail= Label(self.frame, text='e-mail')
         self.labelemail.place(x=0,y=250)
         self.email_str= StringVar()
-        self.entryemail= Entry(self.frame, textvariable= self.email_str, width=22)
+        self.entryemail= Entry(self.frame, textvariable= self.email_str, width=50)
         self.entryemail.place(x=50,y=250)
         
         self.button1 = Button(self.frame, text='Salvar', height=1, width=25,command=self.salvar)
-        self.button1.place(x=5,y=280)
+        self.button1.place(x=100,y=280)
         self.label_str= StringVar()
-        self.labelanswer= Label(self.frame, textvariable= self.label_str)
-        self.labelanswer.place(x=40,y=350)
 
-    def salvar(self):
-        nome = self.name_str.get();
-        cpf = self.cpf_str.get();
-        end = self.endereco_str.get();
-        tel = self.telefone_str.get();
-        dt_nasc = self.dt_nasc_str.get();
-        email = self.email_str.get();
-        cargo = self.cargo_str.get();
-        salario = self.salario_str.get();
-
-        controle = Controle()
-        controle.cadastrar_funcionario(nome, cpf, end, tel, dt_nasc, email, cargo, salario)
+        self.lista_func = Listbox(self.frame, height = 10, width = 60)
+        self.lista_func.place(x=2, y=320)
         
-    
+    def salvar(self):
+        self.controle = Controle()
+        self.controle.cadastrar_funcionario(self.name_str.get(), self.cpf_str.get(), self.endereco_str.get(), self.telefone_str.get(),
+                                            self.dt_nasc_str.get(), self.email_str.get(), self.cargo_str.get(), self.salario_str.get())
+
+        self.lista_func.insert(1, self.controle.listaFuncionarios[0])
+
+        
 root= Tk()
 p = Crud_Funcionario(root)
 root.mainloop()
