@@ -120,8 +120,6 @@ class Controle:
         novo_cliente = Cliente(nome, cpf, endereco, telefone, email)
 
         self.listaClientes.append(novo_cliente)
-        self.salvar_dados()
-        print "Lista" + self.listaClientes[0].nome
 
     def retornar_cliente(self, cpf):
         
@@ -251,8 +249,4 @@ class Controle:
         funcionario = self.retornar_funcionario(cpf)
         self.listaFuncionarios.remove(funcionario)
         
-    def retorna_funcionarios(self):
-        self.lista = []
-        for i in range(len(self.listaFuncionarios)):
-            self.lista.append(self.listaFuncionarios[i][0])
-        return self.lista
+

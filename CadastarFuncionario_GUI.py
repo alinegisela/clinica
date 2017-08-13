@@ -54,9 +54,16 @@ class Crud_Funcionario:
         self.entryemail= Entry(self.frame, textvariable= self.email_str, width=50)
         self.entryemail.place(x=50,y=250)
         
-        self.button1 = Button(self.frame, text='Salvar', height=1, width=25,command=self.salvar)
-        self.button1.place(x=100,y=280)
+        self.button1 = Button(self.frame, text='Salvar', height=1, width=15,command=self.salvar)
+        self.button1.place(x=10,y=280)
         self.label_str= StringVar()
+
+        self.button2 = Button(self.frame, text='Selecionar', height=1, width=15,command=self.seleciona)
+        self.button2.place(x=130,y=280)
+        self.label_str1= StringVar()
+
+        self.labelanswer= Label(self.frame, textvariable= self.label_str)
+        self.labelanswer.place(x=40,y=400)
 
         self.lista_func = Listbox(self.frame, height = 10, width = 60)
         self.lista_func.place(x=2, y=320)
@@ -68,7 +75,16 @@ class Crud_Funcionario:
 
         self.lista_func.insert(1, self.controle.listaFuncionarios[0])
 
+    def seleciona(self):
+        self.controle = Controle()
+        items = self.lista_func.curselection()
+        print items
         
-root= Tk()
-p = Crud_Funcionario(root)
-root.mainloop()
+
+
+janela= Tk()
+p = Crud_Funcionario(janela)
+janela.title("Clinica Sinta-se Bem")
+janela.geometry("700x600")
+janela.configure(background='Beige') 
+janela.mainloop()
