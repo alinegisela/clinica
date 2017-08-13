@@ -1,5 +1,5 @@
 #Criacao da classe CONTROLE
-from cliente import Cliente
+from Cliente import Cliente
 from Pacote import Pacote
 from Venda import Venda
 from Tratamento import Tratamento
@@ -15,7 +15,7 @@ class Controle:
         self.listaTratamentos = []
         self.listaVendas = []
         self.listaPacotes = []
-        self.carregar_dados
+        self.carregar_dados()
 
     def carregar_dados(self):
         #as classes com composicao e listas, como ler?
@@ -84,15 +84,14 @@ class Controle:
             venda_string += "\n"
             
         pacote_string = ""
-		
         for i in range(len(self.listaPacotes)):
             c = self.listaPacotes[i]
+            
 	    t = ""
-	    for k in range(self.listaPacotes.tratamentos):
-		t += self.listaPacotes.tratamentos[k].id+"/ "
-				
-	    pacote_string += c.total + ", " + t
-
+            for k in range(self.listaPacotes.tratamentos):
+	    	t += self.listaPacotes.tratamentos[k].id+"/ "
+			
+            pacote_string += c.total + ", " + t
             pacote_string += "\n"
             
         handleClientes.write(cliente_string)
@@ -113,15 +112,15 @@ class Controle:
         self.listaTratamentos.append(novo_tratamento)
 
     def cadastrar_pacote(self, id, total, lista_Tratamento):
-        self.listaPacotes.append(id, total, lista_Tratamento)
+        novo_pacote = Pacote(id, total, lista_Tratamento)
+        self.listaPacotes.append(novo_pacote)
 
     def cadastrar_cliente(self, nome, cpf, endereco, telefone, email):
 
         novo_cliente = Cliente(nome, cpf, endereco, telefone, email)
 
         self.listaClientes.append(novo_cliente)
-        self.salvar_dados()
-        print "Lista" + self.listaClientes[0].nome
+        
 
     def retornar_cliente(self, cpf):
         
@@ -131,7 +130,7 @@ class Controle:
                 return cliente
             
     def atualizar_cliente(self, nome, cpf, end, tel, email):
-        cliente = self.retornar_funcionario(cpf)
+        cliente = self.retornar_cliente(cpf)
         cliente.nome = nome
         cliente.endereco = end
         cliente.telefone = tel
