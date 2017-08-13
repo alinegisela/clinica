@@ -120,6 +120,8 @@ class Controle:
         novo_cliente = Cliente(nome, cpf, endereco, telefone, email)
 
         self.listaClientes.append(novo_cliente)
+        self.salvar_dados()
+        print "Lista" + self.listaClientes[0].nome
 
     def retornar_cliente(self, cpf):
         
