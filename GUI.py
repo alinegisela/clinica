@@ -6,6 +6,7 @@ class SampleApp(tk.Frame):
     def __init__(self,janela ,*args, **kwargs):
         tk.Frame.__init__(self,janela, *args, **kwargs)
         self.root  = janela
+        self.controle = Controle()
 
         # the container is where we'll stack a bunch of frames
         # on top of each other, then the one we want visible
@@ -23,8 +24,9 @@ class SampleApp(tk.Frame):
         self.frames = {}
         for F in (Cadastrar_cliente, StartPage, Atualizar_cliente, Retornar_cliente, Deletar_cliente, Login, Inicio, Cadastrar_venda, Recuperar_pacotes, Inicio_gerente, Cadastrar_pacote, Deletar_pacote):
             page_name = F.__name__
-            frame = F(parent=container, controller=self, root=self.root)
+            frame = F(parent=container, controller=self, root=self.root, controle=self.controle)
             self.frames[page_name] = frame
+           
 
             # put all of the pages in the same location;
             # the one on the top of the stacking order
@@ -48,11 +50,11 @@ class SampleApp(tk.Frame):
 
 class StartPage(tk.Frame):
 
-    def __init__(self, parent, controller, root):
+    def __init__(self, parent, controller, root, controle):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         self.root = root
-
+        self.controle = controle
         
         
         label = tk.Label(self, text="Teste")
@@ -70,12 +72,12 @@ class StartPage(tk.Frame):
 
 class Cadastrar_cliente(tk.Frame):
 
-    def __init__(self, parent, controller, root):
+    def __init__(self, parent, controller, root, controle):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         self.root = root
-
-        self.controle = Controle()
+        self.controle = controle
+        #self.controle = Controle()
 
         
 
@@ -119,16 +121,18 @@ class Cadastrar_cliente(tk.Frame):
         
     def acao(self):
         self.controle.cadastrar_cliente(self.nome_str.get(), self.cpf_str.get(), self.endereco_str.get(), self.telefone_str.get(), self.email_str.get() )
+        self.controller.show_frame("Inicio")
 
 
 class Login(tk.Frame):
 
-    def __init__(self, parent, controller, root):
+    def __init__(self, parent, controller, root, controle):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         self.root = root
+        self.controle = controle
 
-        self.controle = Controle()
+        #self.controle = Controle()
 
         root.config(menu=tk.Menu(root))
         #self.menu = Menu_(self.root, self)
@@ -166,12 +170,13 @@ class Login(tk.Frame):
 
 class Atualizar_cliente(tk.Frame):
 
-    def __init__(self, parent, controller, root):
+    def __init__(self, parent, controller, root, controle):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         self.root = root
+        self.controle = controle
 
-        self.controle = Controle()
+        #self.controle = Controle()
 
         self.nome = tk.Label(self, text='Nome')
         self.nome_str = tk.StringVar()
@@ -213,17 +218,19 @@ class Atualizar_cliente(tk.Frame):
     def acao(self):
         print self.controle.listaClientes[0]
         self.controle.atualizar_cliente(self.nome_str.get(), self.cpf_str.get(), self.endereco_str.get(), self.telefone_str.get(), self.email_str.get() )
-        print self.controle.listaClientes[0] 
+        print self.controle.listaClientes[0]
+        self.controller.show_frame("Inicio")
 
 global cpf
 cpf = 'a'
 class Retornar_cliente(tk.Frame):
 
-    def __init__(self, parent, controller, root):
+    def __init__(self, parent, controller, root, controle):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         self.root = root
-        self.controle = Controle()
+        self.controle = controle
+        #self.controle = Controle()
         
 
         self.cpfText = tk.Label(self, text='Cpf: ')
@@ -270,12 +277,13 @@ class Retornar_cliente(tk.Frame):
 
 class Deletar_cliente(tk.Frame):
 
-    def __init__(self, parent, controller, root):
+    def __init__(self, parent, controller, root, controle):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         self.root = root
+        self.controle = controle
 
-        self.controle = Controle()
+        #self.controle = Controle()
 
         #self.menu = Menu_(self.root, self)
 
@@ -302,12 +310,12 @@ class Deletar_cliente(tk.Frame):
   
 class Inicio(tk.Frame):
     
-    def __init__(self, parent, controller, root):
+    def __init__(self, parent, controller, root, controle):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         self.root = root
-
-        self.controle = Controle()
+        self.controle = controle
+        #self.controle = Controle()
         
         self.cliente = self.controle.retornar_cliente( cpf)
 
@@ -339,12 +347,12 @@ class Inicio(tk.Frame):
     
 class Inicio_gerente(tk.Frame):
     
-    def __init__(self, parent, controller, root):
+    def __init__(self, parent, controller, root, controle):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         self.root = root
-
-        self.controle = Controle()
+        self.controle = controle
+        #self.controle = Controle()
         
         self.cliente = self.controle.retornar_cliente( cpf)
 
@@ -374,15 +382,13 @@ class Inicio_gerente(tk.Frame):
 
 #Cadastro de Venda
 class Cadastrar_venda(tk.Frame):
-    def __init__(self, parent, controller, root):
+    def __init__(self, parent, controller, root, controle):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         self.root = root
+        self.controle = controle
 
-        self.controle = Controle()
-
-
-        self.cpf = tk.Label(self, text='Cpf')
+        self.cpf = tk.Label(self, text='Cpf do cliente: ')
         self.cpf_str = tk.StringVar()
         self.cpf_input = tk.Entry(self, textvariable = self.cpf_str)
 
@@ -391,7 +397,16 @@ class Cadastrar_venda(tk.Frame):
         self.pacote_str = tk.StringVar()
         self.pacote_input = tk.Entry(self, textvariable = self.pacote_str)
 
+        self.lb_opcao = tk.StringVar()
+        self.lb = tk.Listbox(self, listvariable=self.lb_opcao, height=4, selectmode=tk.SINGLE)
 
+        for i in range(len(self.controle.listar_pacotes_lucro())):
+            self.lb.insert(i+1, "Pacote "+str(i+1))
+      
+        self.lb.grid()
+        self.pacotes = tk.StringVar()
+        self.nome = tk.Label(self, textvariable=self.pacotes)
+        self.nome.grid(row=2)
         
         self.cpf.grid(row=1)
         self.cpf_input.grid(row=1, column=1)
@@ -405,16 +420,21 @@ class Cadastrar_venda(tk.Frame):
         
         
     def acao(self):
-        self.controle.cadastrar_venda(self.cpf_str.get(), self.pacote_str.get())
-        controller.show_frame("Inicio")
+        indice = self.lb.curselection()
+        self.controle.cadastrar_venda(self.cpf_str.get(), indice[0])
+        self.controller.show_frame("Inicio")
 
+    def update(self):
+        print 'update'
+        self.pacotes.set(self.controle.listar_pacotes())
 class Cadastrar_pacote(tk.Frame):
-    def __init__(self, parent, controller, root):
+    def __init__(self, parent, controller, root, controle):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         self.root = root
+        self.controle = controle
 
-        self.controle = Controle()
+        #self.controle = Controle()
 
 
         #mudar para listbox
@@ -442,72 +462,94 @@ class Cadastrar_pacote(tk.Frame):
         trat_selec = []
         total = 0;
         for i in range(len(lista)):
-            trat_selec.append(self.trat[i])
-            total += int(self.trat[i].valor)
-
-        #id
-        self.controle.cadastrar_pacote(1,total, trat_selec)
+            trat_selec.append(lista[i])
+            total += int(self.trat[int(lista[i])].valor)
+        print 'aaaa'
+        self.controle.cadastrar_pacote(total, trat_selec)
+        print 'bbb'
         self.controller.show_frame("Inicio")
 
 
 
     
 class Recuperar_pacotes(tk.Frame):
-    def __init__(self, parent, controller, root):
+    def __init__(self, parent, controller, root, controle):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         self.root = root
+        self.controle = controle
 
-        self.controle = Controle()
-        
-        self.pacotes = self.controle.listar_pacotes()
+        #self.controle = Controle()
 
-        self.nome = tk.Label(self, text=self.pacotes)
+        self.pacotes = tk.StringVar()
         
-        self.nome.grid(row=1)
+        self.titulo = tk.Label(self, text="Lista de pacotes por lucro")
+        self.nome = tk.Label(self, textvariable=self.pacotes)
+        
+        self.titulo.grid(row=1)
+        self.nome.grid(row=2)
         
         
         #alterar os commands
-        self.b = tk.Button(self, text='Atualizar dados do cliente', command=self.acao)
-        self.b.grid(row=6, column=1)
-        self.b2 = tk.Button(self, text='Deletar dados do cliente', command=self.acao)
-        self.b.grid(row=6, column=0)
+
+    def update(self):
+        print 'update'
+        self.pacotes.set(self.controle.listar_pacotes())
+        print self.controle.listar_pacotes()
         
         
-        
-    def acao(self):
-        self.controle.retornar_cliente(self.cpf_input.get())
+      
 
 class Deletar_pacote(tk.Frame):
 
-    def __init__(self, parent, controller, root):
+    def __init__(self, parent, controller, root, controle):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         self.root = root
+        self.controle = controle
 
-        self.controle = Controle()
+        #self.controle = Controle()
 
         #self.menu = Menu_(self.root, self)
+        
+        self.lb_opcao = tk.StringVar()
+        self.lb = tk.Listbox(self, listvariable=self.lb_opcao, height=4, selectmode=tk.MULTIPLE)
 
-        self.texto = tk.Label(self, text='Digite o Cpf do cliente')
 
-        self.cpf = tk.Label(self, text='Cpf')
-        self.cpf_str = tk.StringVar()
-        self.cpf_input = tk.Entry(self, textvariable = self.cpf_str)
+        for i in range(len(self.controle.listar_pacotes_lucro())):
+            self.lb.insert(i+1, "Pacote "+str(i+1))
 
-        self.texto.grid(row=1)
-        self.cpf.grid(row=2, column=0)
-        self.cpf_input.grid(row=2, column=1)
-              
-        self.b = tk.Button(self, text='Deletar todos os dados do cliente', command=self.acao)
+      
+        self.lb.grid()
+
+        self.b = tk.Button(self, text='Deletar pacote(s)', command=self.acao)
         self.b.grid(row=3, column=1)
         
+        self.pacotes = tk.StringVar()
+        
+       
+        self.nome = tk.Label(self, textvariable=self.pacotes)
+        
+        self.nome.grid(row=2)
         
         
     def acao(self):
        
-        self.controle.deletar_cliente(self.cpf_str.get() )
+      
 
+        lista = self.lb.curselection()
+        trat_selec = []
+        
+        for i in range(len(lista)):
+            trat_selec.append(lista[i])
+            
+        self.controle.deletar_pacote(trat_selec)
+        self.controller.show_frame("Inicio")
+        
+    def update(self):
+        print 'update'
+        self.pacotes.set(self.controle.listar_pacotes())
+        
 
   
     
