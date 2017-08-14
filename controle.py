@@ -1,5 +1,5 @@
 #Criacao da classe CONTROLE
-from Cliente import Cliente
+from cliente import Cliente
 from Pacote import Pacote
 from Venda import Venda
 from Tratamento import Tratamento

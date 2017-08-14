@@ -62,8 +62,9 @@ class Crud_Funcionario:
         self.button2.place(x=130,y=280)
         self.label_str1= StringVar()
 
-        self.labelanswer= Label(self.frame, textvariable= self.label_str)
-        self.labelanswer.place(x=40,y=400)
+        self.button3 = Button(self.frame, text='Atualizar', height=1, width=15,command=self.atualizar_funcionario)
+        self.button3.place(x=250,y=280)
+        self.label_str1= StringVar()
 
         self.lista_func = Listbox(self.frame, height = 10, width = 60)
         self.lista_func.place(x=2, y=320)
@@ -74,12 +75,53 @@ class Crud_Funcionario:
                                             self.dt_nasc_str.get(), self.email_str.get(), self.cargo_str.get(), self.salario_str.get())
 
         self.lista_func.insert(1, self.controle.listaFuncionarios[0])
+        self.name_str.set('')
+        self.cpf_str.set('')
+        self.endereco_str.set('')
+        self.telefone_str.set('')
+        self.dt_nasc_str.set('')
+        self.salario_str.set('')
+        self.cargo_str.set('')
+        self.email_str.set('')
 
     def seleciona(self):
+        self.value=str((self.lista_func.get(ACTIVE)))
+        self.algo = self.value.split('\n')
+        for i in range(len(self.algo)):
+            for j in range(len(self.algo[i])):
+                if self.algo[i][j] == ':':
+                    if i == 0:
+                        self.name_str.set(self.algo[i][j+1:])
+                    if i == 1:
+                        self.cpf_str.set(self.algo[i][j+1:])
+                    if i == 2:
+                        self.endereco_str.set(self.algo[i][j+1:])
+                    if i == 3:
+                        self.telefone_str.set(self.algo[i][j+1:])
+                    if i == 4:
+                        self.dt_nasc_str.set(self.algo[i][j+1:])
+                    if i == 5:
+                        self.email_str.set(self.algo[i][j+1:])
+                    if i == 6:
+                        self.cargo_str.set(self.algo[i][j+1:])
+                    if i == 7:
+                        self.salario_str.set(self.algo[i][j+1:])
+
+    def atualizar_funcionario(self):
         self.controle = Controle()
-        items = self.lista_func.curselection()
-        print items
-        
+        self.controle.atualizar_funcionario(self.name_str.get(), self.cpf_str.get(), self.endereco_str.get(), self.telefone_str.get(),
+                                            self.dt_nasc_str.get(), self.email_str.get(), self.cargo_str.get(), self.salario_str.get())
+
+        self.name_str.set('')
+        self.cpf_str.set('')
+        self.endereco_str.set('')
+        self.telefone_str.set('')
+        self.dt_nasc_str.set('')
+        self.salario_str.set('')
+        self.cargo_str.set('')
+        self.email_str.set('')
+
+
 
 
 janela= Tk()
