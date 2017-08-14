@@ -1,0 +1,2 @@
+1, terapia, 100
+2, psiquiatria, 500

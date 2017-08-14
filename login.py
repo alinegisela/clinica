@@ -5,3 +5,5 @@ class Login:
         self.usuario = usuario
         self.senha = senha
 		
+    def __str__(self):
+        return "usuario: "+self.usuario+"\nsenha: "+self.senha

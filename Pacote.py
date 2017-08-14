@@ -1,6 +1,7 @@
 class Pacote:
 	
 	def __init__(self, id, total, tratamentos):
+                #id random
 		self.id = id
 		self.total = total
 		self.tratamentos = tratamentos

@@ -10,7 +10,7 @@ from datetime import date
 class Controle:
 
     def __init__(self):
-
+        
         self.listaClientes = []
         self.listaFuncionarios = []
         self.listaTratamentos = []
@@ -20,6 +20,7 @@ class Controle:
         self.carregar_dados()
 
     def carregar_dados(self):
+        
         #as classes com composicao e listas, como ler?
         handleClientes = open("dados\\clientes.txt", "r")
         handleFuncionarios = open("dados\\funcionarios.txt", "r")
@@ -27,30 +28,46 @@ class Controle:
         handleVendas = open("dados\\vendas.txt", "r")
         handlePacotes = open("dados\\pacotes.txt", "r")
         handleLogin = open("dados\\login.txt", "r")
+      
         
         for line in handleClientes:
             attr = line.split(', ')
+            attr2 = attr[4].split('\n')
+            attr[4] = attr2[0]
             self.cadastrar_cliente(attr[0], attr[1], attr[2], attr[3], attr[4])
 
         for line in handleFuncionarios:
-            atributos = line.split(', ')
-            self.cadastrar_funcionario(attr[0], attr[1], attr[2], attr[3], attr[4], attr[5], attr[6], attr[7], attr[8])
+            
+            attr = line.split(', ')
+            attr2 = attr[7].split('\n')
+            attr[7] = attr2[0]
+            self.inserir_funcionario(attr[0], attr[1], attr[2], attr[3], attr[4], attr[5], attr[6], attr[7])
+
+        for line in handleLogin:
+            attr = line.split(', ')
+            attr2 = attr[1].split('\n')
+            attr[1] = attr2[0]
+            self.cadastrar_login(attr[0], attr[1])
 
         for line in handleTratamentos:
             attr = line.split(', ')
-            self.cadastrar_tratamento(attr[0], attr[1])
+            attr2 = attr[2].split('\n')
+            attr[2] = attr2[0]
+            self.cadastrar_tratamento(attr[0], attr[1], attr[2])
 
         for line in handleVendas:
             attr = line.split(', ')
+            attr2 = attr[3].split('\n')
+            attr[3] = attr2[0]
             self.cadastrar_venda(attr[0], attr[1], attr[2], attr[3])
 
         for line in handlePacotes:
             attr = line.split(', ')
+            attr2 = attr[0].split('\n')
+            attr[0] = attr2[0]
             self.cadastrar_pacote(attr[0])
 
-        for line in handleLogin:
-            attr = line.split(', ')
-            self.cadastrar_login(attr[0], attr[1])
+        
             
         handleClientes.close()
         handleFuncionarios.close()
@@ -58,6 +75,8 @@ class Controle:
         handleVendas.close()
         handlePacotes.close()
         handleLogin.close()
+
+      
         
     def salvar_dados(self):
         #as classes com composicao e listas, como armazenar?
@@ -95,10 +114,10 @@ class Controle:
         pacote_string = ""
         for i in range(len(self.listaPacotes)):
             c = self.listaPacotes[i]
-            
-	    t = ""
+
+            t = ""
             for k in range(self.listaPacotes.tratamentos):
-	    	t += self.listaPacotes.tratamentos[k].id+"/ "
+                t += self.listaPacotes.tratamentos[k].id+"/ "
 			
             pacote_string += c.total + ", " + t
             pacote_string += "\n"
@@ -123,15 +142,31 @@ class Controle:
         handlePacotes.close()
         handleCliente.close()
 
-    def cadastrar_tratamento(self, nome, valor):
+    def cadastrar_tratamento(self, id,nome, valor):
 
-        novo_tratamento = Tratamento(nome, valor)
+        novo_tratamento = Tratamento(id, nome, valor)
         self.listaTratamentos.append(novo_tratamento)
 
-    def cadastrar_pacote(self, id, total, lista_Tratamento):
-        novo_pacote = Pacote(id, total, lista_Tratamento)
+    def buscar_tratamento(self, id):
+        
+        for i in range(len(self.listaTratamentos)):
+            if self.listaTratamentos[i].id == id:
+                pacote = self.listaTratamentos[i]
+                return pacote
+
+    def cadastrar_pacote(self,id, total, lista_Tratamento):
+        novo_pacote = Pacote( id,total, lista_Tratamento)
         self.listaPacotes.append(novo_pacote)
 
+    def retornar_pacote(self, id):
+        
+        for i in range(len(self.listaPacotes)):
+            if self.listaPacotes[i].id == id:
+                pacote = self.listaPacotes[i]
+                return pacote
+
+        
+   
     def cadastrar_cliente(self, nome, cpf, endereco, telefone, email):
 
         novo_cliente = Cliente(nome, cpf, endereco, telefone, email)
@@ -156,9 +191,10 @@ class Controle:
         cliente = self.retornar_cliente(cpf)
         self.listaClientes.remove(cliente)
 
-    def cadastrar_venda(self, Cliente, Pacote, data, valorTotal):
+    def cadastrar_venda(self, cpf_cliente, id_pacote):
 
-        nova_venda = Venda(Cliente, Pacote, data, valorTotal)
+        data = date.today().strftime("%d/%m/%y")
+        nova_venda = Venda(self.retornar_cliente(cpf_cliente), self.retornar_pacote(id_pacote), data)
         
         self.listaVendas.append(nova_venda)
         
@@ -171,6 +207,21 @@ class Controle:
             pacotes += pacotes_lucro[i].__str__() + "\n\n"
     
         return pacotes
+    
+    def listar_tratamentos(self):
+        #sorted: organiza lista em ordem crescente pelo atributo total
+        pacotes_lucro = sorted(self.listaTratamentos, key=lambda tratamento: tratamento.valor)
+        
+        pacotes = ""
+        for i in range(len(pacotes_lucro)-1, -1, -1):
+            pacotes += pacotes_lucro[i].__str__() + "\n\n"
+        print pacotes
+        return pacotes
+
+    def retornar_tratamentos(self):
+        trat = self.listaTratamentos
+        return trat
+        
 
     def listar_pacotes_cliente(self, cpf_cliente):
         pacotes = []
@@ -246,7 +297,13 @@ class Controle:
         novo_login = Login(cpf, senha)
         self.listaFuncionarios.append(novo_funcionario)
         self.listaLogin.append(novo_login)
-       
+
+    def inserir_funcionario(self, nome, cpf, end, tel, dt_nasc, email, cargo, salario):
+        novo_funcionario = Funcionario(nome, cpf, end, tel, dt_nasc, email, cargo, salario)
+        
+        self.listaFuncionarios.append(novo_funcionario)
+      
+        
     def retornar_funcionario(self, cpf):
         
         for i in range(len(self.listaFuncionarios)):
@@ -269,17 +326,32 @@ class Controle:
         self.listaFuncionarios.remove(funcionario)
 
     def cadastrar_login(self, usuario, senha):
+        
         novo_login = Login(usuario, senha)
         self.listaLogin.append(novo_login)
 
     def login(self, usuario, senha):
-        validar = False
+        validar = [False, False]
+       
         for i in range(len(self.listaFuncionarios)):
+            
             if self.listaFuncionarios[i].cpf == usuario:
-                for j in range(self.listaLogin):
+                
+                for j in range(len(self.listaLogin)):
+                    
                     if self.listaLogin[j].usuario == usuario:
+                        
                         if self.listaLogin[j].senha == senha:
-                            validar = True
+                            validar[0] = True
+                           
+                            break
+                        
+                if validar[0]==True:
+                    if self.listaFuncionarios[i].cargo == 'gerente':
+                        validar[1] = True
+                    return validar
         
-
+        print validar
         return validar
+
+    

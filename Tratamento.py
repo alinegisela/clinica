@@ -1,6 +1,7 @@
 class Tratamento:
 	
 	def __init__(self, id, nome, valor):
+                #id random
 		self.id = id
 		self.nome = nome
 		self.valor = valor
