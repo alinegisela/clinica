@@ -22,7 +22,7 @@ class SampleApp(tk.Frame):
         #self.menu = Menu_(self.root, self)
 
         self.frames = {}
-        for F in (Cadastrar_cliente, StartPage, Atualizar_cliente, Retornar_cliente, Deletar_cliente, Login, Inicio, Cadastrar_venda, Recuperar_pacotes, Inicio_gerente, Cadastrar_pacote, Deletar_pacote):
+        for F in (Cadastrar_cliente, StartPage, Atualizar_cliente, Retornar_cliente, Deletar_cliente, Login, Inicio, Cadastrar_venda, Recuperar_pacotes, Inicio_gerente, Cadastrar_pacote, Deletar_pacote, Listar_venda):
             page_name = F.__name__
             frame = F(parent=container, controller=self, root=self.root, controle=self.controle)
             self.frames[page_name] = frame
@@ -400,7 +400,9 @@ class Cadastrar_venda(tk.Frame):
         self.lb_opcao = tk.StringVar()
         self.lb = tk.Listbox(self, listvariable=self.lb_opcao, height=4, selectmode=tk.SINGLE)
 
-        for i in range(len(self.controle.listar_pacotes_lucro())):
+        self.tamanho = len(self.controle.listaPacotes)
+        
+        for i in range(self.tamanho):
             self.lb.insert(i+1, "Pacote "+str(i+1))
       
         self.lb.grid()
@@ -424,9 +426,58 @@ class Cadastrar_venda(tk.Frame):
         self.controle.cadastrar_venda(self.cpf_str.get(), indice[0])
         self.controller.show_frame("Inicio")
 
+    def inserir_lb(self, tamanho):
+        for i in range(tamanho):
+            self.lb.insert(i+1, "Pacote "+str(i+1))
+
     def update(self):
         print 'update'
         self.pacotes.set(self.controle.listar_pacotes())
+        print self.tamanho
+        print 'tamanho da lista - ' + str(len(self.controle.listaPacotes))
+        if self.tamanho != len(self.controle.listaPacotes):
+           self.lb.delete(0, self.lb.size())
+           tamanho = len(self.controle.listaPacotes)
+           self.inserir_lb(tamanho)
+        self.tamanho = len(self.controle.listaPacotes)
+
+class Listar_venda(tk.Frame):
+    def __init__(self, parent, controller, root, controle):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        self.root = root
+        self.controle = controle
+
+        self.texto = tk.Label(self, text='Digite o CPF do cliente')
+
+        self.cpf = tk.Label(self, text='CPF: ')
+        self.cpf_str = tk.StringVar()
+        self.cpf_input = tk.Entry(self, textvariable = self.cpf_str)
+
+        self.texto.grid(row=1)
+        self.cpf.grid(row=2, column=0)
+        self.cpf_input.grid(row=2, column=1)
+              
+
+        self.vendas = tk.StringVar()
+        
+        self.titulo = tk.Label(self, text="Lista de pacotes adquiridos")
+        self.nome = tk.Label(self, textvariable=self.vendas)
+        
+        self.titulo.grid(row=4)
+        self.nome.grid(row=5)
+
+        self.b = tk.Button(self, text='OK', command=self.acao)
+        self.b.grid(row=3, column=1)
+        
+    def acao(self):
+        self.vendas.set(self.controle.listar_venda_cliente(self.cpf_str.get()))
+      
+
+    def update(self):
+        print 'update'
+        self.vendas.set("")
+        
 class Cadastrar_pacote(tk.Frame):
     def __init__(self, parent, controller, root, controle):
         tk.Frame.__init__(self, parent)
@@ -515,8 +566,8 @@ class Deletar_pacote(tk.Frame):
         self.lb_opcao = tk.StringVar()
         self.lb = tk.Listbox(self, listvariable=self.lb_opcao, height=4, selectmode=tk.MULTIPLE)
 
-
-        for i in range(len(self.controle.listar_pacotes_lucro())):
+        self.tamanho = len(self.controle.listaPacotes)
+        for i in range(self.tamanho):
             self.lb.insert(i+1, "Pacote "+str(i+1))
 
       
@@ -531,11 +582,25 @@ class Deletar_pacote(tk.Frame):
         self.nome = tk.Label(self, textvariable=self.pacotes)
         
         self.nome.grid(row=2)
+
+    
+
+    def inserir_lb(self, tamanho):
+        for i in range(tamanho):
+            self.lb.insert(i+1, "Pacote "+str(i+1))
+
+    def update(self):
+        print 'update'
+        self.pacotes.set(self.controle.listar_pacotes())
+        print self.tamanho
+        print 'tamanho da lista - ' + str(len(self.controle.listaPacotes))
+        if self.lb.size() != len(self.controle.listaPacotes):
+           self.lb.delete(0, self.lb.size())
+           tamanho = len(self.controle.listaPacotes)
+           self.inserir_lb(tamanho)
         
         
     def acao(self):
-       
-      
 
         lista = self.lb.curselection()
         trat_selec = []
@@ -545,10 +610,6 @@ class Deletar_pacote(tk.Frame):
             
         self.controle.deletar_pacote(trat_selec)
         self.controller.show_frame("Inicio")
-        
-    def update(self):
-        print 'update'
-        self.pacotes.set(self.controle.listar_pacotes())
         
 
   
@@ -591,6 +652,7 @@ class Menu_(tk.Frame):
         subMenu3 = tk.Menu(self.menu)
         self.menu.add_cascade(label='Vendas', menu=subMenu3)
         subMenu3.add_command(label='Registrar nova venda', command=lambda : controller.show_frame("Cadastrar_venda"))
+        subMenu3.add_command(label='Listar vendas de um cliente', command=lambda : controller.show_frame("Listar_venda"))
         
         subMenu.add_separator()
         
@@ -634,6 +696,7 @@ class Menu_gerente(tk.Frame):
         subMenu3 = tk.Menu(self.menu)
         self.menu.add_cascade(label='Vendas', menu=subMenu3)
         subMenu3.add_command(label='Registrar nova venda', command=lambda : controller.show_frame("Cadastrar_venda"))
+        subMenu3.add_command(label='Listar vendas de um cliente', command=lambda : controller.show_frame("Listar_venda"))
         
         
         subMenu.add_separator()

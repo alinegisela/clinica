@@ -336,11 +336,17 @@ class Controle:
         pacotes = []
 
         for i in range(len(self.listaVendas)):
-            if self.listaVendas[i].cpf_cliente == cpf_cliente:
+            if self.listaVendas[i].cliente.cpf == cpf_cliente:
                 pacotes.append(self.listaVendas[i])
 
         return pacotes
 
+    def listar_venda_cliente(self, cpf_cliente):
+        vendas = self.listar_pacotes_cliente(cpf_cliente)
+        vendas_str = ""
+        for i in range(len(vendas)):
+            vendas_str += vendas[i].__str__()
+        return vendas_str
 
     #retorna uma lista com os lucros por mes, a partir do mes da primeira venda
     def listar_lucro_mes(self):
