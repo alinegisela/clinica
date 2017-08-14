@@ -21,7 +21,7 @@ class SampleApp(tk.Frame):
         #self.menu = Menu_(self.root, self)
 
         self.frames = {}
-        for F in (Cadastrar_cliente, StartPage, Atualizar_cliente, Retornar_cliente, Deletar_cliente, Login):
+        for F in (Cadastrar_cliente, StartPage, Atualizar_cliente, Retornar_cliente, Deletar_cliente, Login, Inicio, Cadastrar_venda, Recuperar_pacotes, Inicio_gerente, Cadastrar_pacote, Deletar_pacote):
             page_name = F.__name__
             frame = F(parent=container, controller=self, root=self.root)
             self.frames[page_name] = frame
@@ -33,11 +33,17 @@ class SampleApp(tk.Frame):
 
       
         self.show_frame("Login")
+        
+  
 
     def show_frame(self, page_name):
         '''Show a frame for the given page name'''
         frame = self.frames[page_name]
         frame.update()
+        frame.tkraise()
+    def menu_gerente(self, page_name):
+        frame = self.frames[page_name]
+        frame.updateGerente()
         frame.tkraise()
 
 class StartPage(tk.Frame):
@@ -148,9 +154,15 @@ class Login(tk.Frame):
         
     #add o else
     def acao(self):
+        
         validar = self.controle.login(self.usuario_str.get(), self.senha_str.get())
-        if validar == True:
-            self.controller.show_frame("StartPage")
+        if validar[0] == True and validar[1] == True:
+            self.controller.show_frame("Inicio_gerente")
+        elif validar[0] == True and validar[1] == False:
+            
+            self.controller.show_frame("Inicio")
+
+        
 
 class Atualizar_cliente(tk.Frame):
 
@@ -211,50 +223,50 @@ class Retornar_cliente(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         self.root = root
-
-        
-        self.menu = Menu_(self.root, self.controller)
-
         self.controle = Controle()
-        self.cliente = self.controle.retornar_cliente( cpf)
-
-        self.nome = tk.Label(self, text="Nome: ")
-        self.nome_input = tk.Label(self, text=self.cliente.nome)
-
-        self.cpf = tk.Label(self, text='Cpf: ')
-        self.cpf_input = tk.Label(self, text = self.cliente.cpf)
-
-
-        self.endereco = tk.Label(self, text='Endereco: ')
-        self.endereco_input = tk.Label(self, text = self.cliente.endereco)
-    
-        self.telefone = tk.Label(self, text='Telefone')
-        self.telefone_input = tk.Label(self, text = self.cliente.telefone)
-
-        self.email = tk.Label(self, text='Email')
-        self.email_input = tk.Label(self, text = self.cliente.email)
-
-        self.nome.grid(row=1)
-        self.nome_input.grid(row=1, column=1)
-        self.cpf.grid(row=2)
-        self.cpf_input.grid(row=2, column=1)
-        self.endereco.grid(row=3)
-        self.endereco_input.grid(row=3, column=1)
-        self.telefone.grid(row=4)
-        self.telefone_input.grid(row=4, column=1)
-        self.email.grid(row=5)
-        self.email_input.grid(row=5, column=1)
         
-        #alterar os commands
-        self.b = tk.Button(self, text='Atualizar dados do cliente', command=self.acao)
-        self.b.grid(row=6, column=1)
-        self.b2 = tk.Button(self, text='Deletar dados do cliente', command=self.acao)
-        self.b.grid(row=6, column=0)
+
+        self.cpfText = tk.Label(self, text='Cpf: ')
+        self.cpf_str = tk.StringVar()
+        self.cpf_inpt = tk.Entry(self, textvariable = self.cpf_str)
+        
+        
+        self.b = tk.Button(self, text='OK', command=self.buscar)     
+        self.nome = tk.StringVar()
+        self.nome_input = tk.Label(self, textvariable=self.nome)
+        
+        self.cpf = tk.StringVar()
+        self.cpf_input = tk.Label(self, textvariable = self.cpf)
+
+        self.endereco = tk.StringVar()
+        self.endereco_input = tk.Label(self, textvariable = self.endereco)
+        
+        self.telefone = tk.StringVar()
+        self.telefone_input = tk.Label(self, textvariable = self.telefone)
+        
+        self.email = tk.StringVar()
+        self.email_input = tk.Label(self, textvariable = self.email)
+        
+
+        self.cpfText.grid(row=0)
+        self.cpf_inpt.grid(row=0, column=1)
+        self.b.grid(row=2, column=1)
+        self.nome_input.grid(row=3, column=1)
+        self.cpf_input.grid(row=4, column=1)
+        self.endereco_input.grid(row=5, column=1)
+        self.telefone_input.grid(row=6, column=1)
+        self.email_input.grid(row=7, column=1)
         
         
         
-    def acao(self):
-        self.controle.retornar_cliente(self.cpf_input.get())
+    def buscar(self):
+        self.cliente = self.controle.retornar_cliente(self.cpf_str.get())
+       
+        self.nome.set("Nome: " + self.cliente.nome)
+        self.cpf.set("Cpf: " + self.cliente.cpf)
+        self.endereco.set("Endereco: " + self.cliente.endereco)
+        self.telefone.set("Telefone: " + self.cliente.telefone)
+        self.email.set("Email: " + self.cliente.email)
 
 class Deletar_cliente(tk.Frame):
 
@@ -285,8 +297,220 @@ class Deletar_cliente(tk.Frame):
     def acao(self):
        
         self.controle.deletar_cliente(self.cpf_str.get() )
-        
 
+
+  
+class Inicio(tk.Frame):
+    
+    def __init__(self, parent, controller, root):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        self.root = root
+
+        self.controle = Controle()
+        
+        self.cliente = self.controle.retornar_cliente( cpf)
+
+        self.nome = tk.Label(self, text="Bem vindo(a) "+self.cliente.nome+"! O que voce deseja fazer?")
+        
+        self.nome.grid(row=1)
+        
+      
+        self.b1 = tk.Button(self, text="Registrar uma venda",
+                            command=lambda: controller.show_frame("Cadastrar_venda"))
+        self.b2 = tk.Button(self, text="Cadastrar novo cliente",
+                            command=lambda: controller.show_frame("Cadastrar_cliente"))
+        self.b3 = tk.Button(self, text="Ver pacotes de tratamentos disponiveis",
+                            command=lambda: controller.show_frame("Recuperar_pacotes"))
+        self.b1.grid()
+        self.b2.grid()
+        self.b3.grid()
+    def update(self):
+      
+        self.menu = Menu_(self.root, self.controller)
+    def updateGerente(self):
+        
+        self.menu = Menu_(self.root, self.controller).menu
+        subMenu = tk.Menu(self.menu)
+        self.menu.add_cascade(label='Cliente', menu=subMenu)
+        subMenu.add_command(label='Cadastrar novo cliente', command=lambda : controller.show_frame("Cadastrar_cliente"))
+        subMenu.add_command(label='Atualizar dados de um cliente', command=lambda : controller.show_frame("Atualizar_cliente"))
+        subMenu.add_command(label='Buscar um cliente', command=lambda : controller.show_frame("Retornar_cliente"))
+    
+class Inicio_gerente(tk.Frame):
+    
+    def __init__(self, parent, controller, root):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        self.root = root
+
+        self.controle = Controle()
+        
+        self.cliente = self.controle.retornar_cliente( cpf)
+
+        self.nome = tk.Label(self, text="Bem vindo(a) "+self.cliente.nome+"! O que voce deseja fazer?")
+        
+        self.nome.grid(row=1)
+        
+      
+        self.b1 = tk.Button(self, text="Registrar uma venda",
+                            command=lambda: controller.show_frame("Cadastrar_venda"))
+        self.b2 = tk.Button(self, text="Cadastrar novo cliente",
+                            command=lambda: controller.show_frame("Cadastrar_cliente"))
+        self.b3 = tk.Button(self, text="Ver pacotes de tratamentos disponiveis",
+                            command=lambda: controller.show_frame("Recuperar_pacotes"))
+        self.b1.grid()
+        self.b2.grid()
+        self.b3.grid()
+    def update(self):
+      
+        self.menu = Menu_gerente(self.root, self.controller).menu
+        subMenu = tk.Menu(self.menu)
+        self.menu.add_cascade(label='Cliente', menu=subMenu)
+        subMenu.add_command(label='Cadastrar novo cliente', command=lambda : controller.show_frame("Cadastrar_cliente"))
+        subMenu.add_command(label='Atualizar dados de um cliente', command=lambda : controller.show_frame("Atualizar_cliente"))
+        subMenu.add_command(label='Buscar um cliente', command=lambda : controller.show_frame("Retornar_cliente"))
+    
+
+#Cadastro de Venda
+class Cadastrar_venda(tk.Frame):
+    def __init__(self, parent, controller, root):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        self.root = root
+
+        self.controle = Controle()
+
+
+        self.cpf = tk.Label(self, text='Cpf')
+        self.cpf_str = tk.StringVar()
+        self.cpf_input = tk.Entry(self, textvariable = self.cpf_str)
+
+        #mudar para listbox
+        self.pacote = tk.Label(self, text='Codigo do pacote')
+        self.pacote_str = tk.StringVar()
+        self.pacote_input = tk.Entry(self, textvariable = self.pacote_str)
+
+
+        
+        self.cpf.grid(row=1)
+        self.cpf_input.grid(row=1, column=1)
+        self.pacote.grid(row=2)
+        self.pacote_input.grid(row=2, column=1)
+ 
+        
+        self.b = tk.Button(self, text='Registrar venda', command=self.acao)
+        self.b.grid(row=3, column=1)
+        
+        
+        
+    def acao(self):
+        self.controle.cadastrar_venda(self.cpf_str.get(), self.pacote_str.get())
+        controller.show_frame("Inicio")
+
+class Cadastrar_pacote(tk.Frame):
+    def __init__(self, parent, controller, root):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        self.root = root
+
+        self.controle = Controle()
+
+
+        #mudar para listbox
+        self.lb_opcao = tk.StringVar()
+        self.lb = tk.Listbox(self, listvariable=self.lb_opcao, height=4, selectmode=tk.MULTIPLE)
+
+        self.trat = self.controle.retornar_tratamentos()
+
+        for i in range(len(self.trat)):
+            print 'jesus'
+            self.lb.insert(i+1, self.trat[i].nome)
+            
+        
+        self.lb.grid()
+
+        
+        self.b = tk.Button(self, text='Cadastrar pacote', command=self.acao)
+        self.b.grid(row=3, column=1)
+        
+        
+        
+    def acao(self):
+        lista = self.lb.curselection()
+        
+        trat_selec = []
+        total = 0;
+        for i in range(len(lista)):
+            trat_selec.append(self.trat[i])
+            total += int(self.trat[i].valor)
+
+        #id
+        self.controle.cadastrar_pacote(1,total, trat_selec)
+        self.controller.show_frame("Inicio")
+
+
+
+    
+class Recuperar_pacotes(tk.Frame):
+    def __init__(self, parent, controller, root):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        self.root = root
+
+        self.controle = Controle()
+        
+        self.pacotes = self.controle.listar_pacotes()
+
+        self.nome = tk.Label(self, text=self.pacotes)
+        
+        self.nome.grid(row=1)
+        
+        
+        #alterar os commands
+        self.b = tk.Button(self, text='Atualizar dados do cliente', command=self.acao)
+        self.b.grid(row=6, column=1)
+        self.b2 = tk.Button(self, text='Deletar dados do cliente', command=self.acao)
+        self.b.grid(row=6, column=0)
+        
+        
+        
+    def acao(self):
+        self.controle.retornar_cliente(self.cpf_input.get())
+
+class Deletar_pacote(tk.Frame):
+
+    def __init__(self, parent, controller, root):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        self.root = root
+
+        self.controle = Controle()
+
+        #self.menu = Menu_(self.root, self)
+
+        self.texto = tk.Label(self, text='Digite o Cpf do cliente')
+
+        self.cpf = tk.Label(self, text='Cpf')
+        self.cpf_str = tk.StringVar()
+        self.cpf_input = tk.Entry(self, textvariable = self.cpf_str)
+
+        self.texto.grid(row=1)
+        self.cpf.grid(row=2, column=0)
+        self.cpf_input.grid(row=2, column=1)
+              
+        self.b = tk.Button(self, text='Deletar todos os dados do cliente', command=self.acao)
+        self.b.grid(row=3, column=1)
+        
+        
+        
+    def acao(self):
+       
+        self.controle.deletar_cliente(self.cpf_str.get() )
+
+
+  
+    
 class Menu_(tk.Frame):
   
     def theend():
@@ -309,18 +533,71 @@ class Menu_(tk.Frame):
         master.title('')
 
         subMenu = tk.Menu(self.menu)
-    
+
+        self.menu.add_command(label='Inicio',command=lambda : controller.show_frame("Inicio"))
         self.menu.add_cascade(label='Cliente', menu=subMenu)
-        subMenu.add_command(label='Novo projeto', command=lambda : controller.show_frame("Cadastrar_cliente"))
-        subMenu.add_command(label='Editar projeto')
+        subMenu.add_command(label='Cadastrar novo cliente', command=lambda : controller.show_frame("Cadastrar_cliente"))
+        subMenu.add_command(label='Atualizar dados de um cliente', command=lambda : controller.show_frame("Atualizar_cliente"))
+        subMenu.add_command(label='Buscar um cliente', command=lambda : controller.show_frame("Retornar_cliente"))
+
+        subMenu2 = tk.Menu(self.menu)
+
+        self.menu.add_cascade(label='Pacotes', menu=subMenu2)
+        subMenu2.add_command(label='Cadastrar novo pacote', command=lambda : controller.show_frame("Cadastrar_pacote"))
+        subMenu2.add_command(label='Excluir pacote', command=lambda : controller.show_frame("Deletar_pacote"))
+
+        subMenu3 = tk.Menu(self.menu)
+        self.menu.add_cascade(label='Vendas', menu=subMenu3)
+        subMenu3.add_command(label='Registrar nova venda', command=lambda : controller.show_frame("Cadastrar_venda"))
+        
+        subMenu.add_separator()
+        
+        subMenu.add_command(label='Sair',command=self.theend)
+
+class Menu_gerente(tk.Frame):
+  
+    def theend():
+        global janela
+        janela.destroy()
+    
+
+    #MENU
+    
+    def __init__(self, master, controller):
+       
+        tk.Frame.__init__(self, master)
+        self.controller = controller
+
+        self.controle = Controle()
+
+      
+        self.menu = tk.Menu(master)
+        master.config(menu=self.menu)
+        master.title('')
+
+        subMenu = tk.Menu(self.menu)
+
+        self.menu.add_command(label='Inicio',command=lambda : controller.show_frame("Inicio_gerente"))
+        self.menu.add_cascade(label='Cliente', menu=subMenu)
+        subMenu.add_command(label='Cadastrar novo cliente', command=lambda : controller.show_frame("Cadastrar_cliente"))
+        subMenu.add_command(label='Atualizar dados de um cliente', command=lambda : controller.show_frame("Atualizar_cliente"))
+        subMenu.add_command(label='Buscar um cliente', command=lambda : controller.show_frame("Retornar_cliente"))
+
+        subMenu2 = tk.Menu(self.menu)
+
+        self.menu.add_cascade(label='Pacotes', menu=subMenu2)
+        subMenu2.add_command(label='Cadastrar novo pacote', command=lambda : controller.show_frame("Cadastrar_pacote"))
+        subMenu2.add_command(label='Excluir pacote', command=lambda : controller.show_frame("Deletar_pacote"))
+
+        subMenu3 = tk.Menu(self.menu)
+        self.menu.add_cascade(label='Vendas', menu=subMenu3)
+        subMenu3.add_command(label='Registrar nova venda', command=lambda : controller.show_frame("Cadastrar_venda"))
+        
+        
         subMenu.add_separator()
         subMenu.add_command(label='Sair',command=self.theend)
 
-    def remove(self):
-        empty = tk.Menu(master)
 
-    def mudar_pag(self, nome_pag, master):
-        g.nome_pag(master, "Cadastrar_cliente")
 if __name__ == "__main__":
     janela = tk.Tk()
     app = SampleApp(janela)
