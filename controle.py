@@ -5,7 +5,7 @@ from Venda import Venda
 from Tratamento import Tratamento
 from Funcionario import Funcionario
 from login import Login
-from datetime import date
+from datetime import *
 from random import randint
 
 class Controle:
@@ -348,63 +348,66 @@ class Controle:
             vendas_str += vendas[i].__str__()
         return vendas_str
 
-    #retorna uma lista com os lucros por mes, a partir do mes da primeira venda
-    def listar_lucro_mes(self):
+    def listar_mes(self):
+        lucro_str = ""
+        vendas = self.listaVendas
+        for i in range(len(vendas)):
+            vendas[i].data = datetime.strptime(vendas[i].data, '%d/%m/%y')
+        vendas = sorted(self.listaVendas, key=lambda venda: venda.data)
+        dt_inicial = vendas[0].data
+        dt_final = vendas[len(vendas)-1].data
+        qtd_ano = (dt_final.year - dt_inicial.year)+1
+        lucro = [[0 for x in range(12)] for y in range(qtd_ano) ]
         
+
+        for i in range(len(vendas)):
+            data_f = vendas[i].data
+            mes = data_f.month
+            ano = data_f.year - dt_inicial.year
+            lucro[ano][mes-1] += vendas[i].pacote.lucro
+
+        for i in range(qtd_ano):
+            for j in range(12):
+                if lucro[i][j] != 0:
+                    mes =""
+                    if j<10:
+                        mes = "0"+str(j+1)
+                    else:
+                        mes = str(j+1)
+                    lucro_str+= mes+"/"+str(i+dt_inicial.year)+" - R$ "+str(lucro[i][j])+"\n"
+        print lucro_str
+        for i in range(len(vendas)):
+            vendas[i].data = datetime.strftime(vendas[i].data, '%d/%m/%y')
+        return lucro_str
+    
+    def listar_ano(self):
+        lucro_str = ""
+        vendas = self.listaVendas
+        
+        if type(vendas[0].data) != type(date.today()):
+            for i in range(len(vendas)):
+                vendas[i].data = datetime.strptime(vendas[i].data, '%d/%m/%y')
         vendas = sorted(self.listaVendas, key=lambda venda: venda.data)
-        mes_anterior = vendas[0].data.month
-        ano_anterior = vendas[0].data.year
-        lucro_mes =  vendas[0].valorTotal * 0.6
-        lucros = []
-
-        for i in range(1, len(vendas)):
-            mes_atual = vendas[i].data.month
-            ano_atual = vendas[i].data.year
-                
-            if ano_atual == ano_anterior and mes_atual == mes_anterior:
-                lucro_mes += vendas[i].valorTotal * 0.6
-                
-            else:  
-                lucros.append(lucro_mes)
-                lucro_mes = 0
-
-                diferenca_ano = ano_atual - ano_anterior
-                diferenca_mes = mes_atual - mes_anterior
-
-                for j in range((12 * diferenca_ano + diferenca_mes)-1):
-                    lucros.append(0)
-                
-                ano_anterior = vendas[i].data.year
-                mes_anterior = vendas[i].data.month
-                lucro_mes = vendas[i].valorTotal * 0.6
-                
-        lucros.append(lucro_mes)
-        return lucros        
-            
-    def listar_lucro_ano(self):
-        vendas = sorted(self.listaVendas, key=lambda venda: venda.data)
-        ano_anterior = vendas[0].data.year
-        lucro_ano = vendas[0].valorTotal * 0.6
-        lucros = []
+        dt_inicial = vendas[0].data
+        dt_final = vendas[len(vendas)-1].data
+        qtd_ano = (dt_final.year - dt_inicial.year)+1
+        lucro = [0 for y in range(qtd_ano) ]
         
         for i in range(len(vendas)):
-            ano_atual = vendas[i].data.year
+            data_f = vendas[i].data
+            
+            ano = data_f.year - dt_inicial.year
+            lucro[ano] += vendas[i].pacote.lucro
 
-            if ano_atual == ano_anterior:
-                lucro_ano += vendas[i].valorTotal * 0.6
-            else:
-                lucros.append(lucro_ano)
-                lucros_ano = 0
-
-                diferenca_ano = ano_atual - ano_anterior
-
-                for j in range(diferenca_ano-1):
-                    lucros.append(0)
-
-                ano_anterior = vendas[i].data.year
-                lucro_ano = vendas[i].valorTotal * 0.6
-        lucros.append(lucro_ano)
-        return lucros
+        for i in range(qtd_ano):
+            if lucro[i]!= 0:
+                lucro_str+= str(i+dt_inicial.year)+" - R$ "+str(lucro[i])+"\n"
+        print lucro_str
+        for i in range(len(vendas)):
+            vendas[i].data = datetime.strftime(vendas[i].data, '%d/%m/%y')
+        return lucro_str
+        return lucro_str
+            
 
      #crud funcionarios
     def cadastrar_funcionario(self, nome, cpf, end, tel, dt_nasc, email, cargo, salario, senha):

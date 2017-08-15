@@ -22,7 +22,7 @@ class SampleApp(tk.Frame):
         #self.menu = Menu_(self.root, self)
 
         self.frames = {}
-        for F in (Cadastrar_cliente, StartPage, Atualizar_cliente, Retornar_cliente, Deletar_cliente, Login, Inicio, Cadastrar_venda, Recuperar_pacotes, Inicio_gerente, Cadastrar_pacote, Deletar_pacote, Listar_venda):
+        for F in (Cadastrar_cliente, StartPage, Atualizar_cliente, Retornar_cliente, Deletar_cliente, Login, Inicio, Cadastrar_venda, Recuperar_pacotes, Inicio_gerente, Cadastrar_pacote, Deletar_pacote, Listar_venda, Lucro):
             page_name = F.__name__
             frame = F(parent=container, controller=self, root=self.root, controle=self.controle)
             self.frames[page_name] = frame
@@ -477,6 +477,44 @@ class Listar_venda(tk.Frame):
     def update(self):
         print 'update'
         self.vendas.set("")
+
+class Lucro(tk.Frame):
+    def __init__(self, parent, controller, root, controle):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        self.root = root
+        self.controle = controle
+        
+        self.var = tk.IntVar()
+        
+        self.R1 = tk.Radiobutton(self, text="Lucro anual", variable=self.var, value=1,
+                  command=self.update)
+
+        self.R2 = tk.Radiobutton(self, text="Lucro mensal", variable=self.var, value=2,
+                  command=self.update)
+
+
+        self.lucro = tk.StringVar()
+        
+       # self.titulo = tk.Label(self, text="Lucro por ano")
+        self.nome = tk.Label(self, textvariable=self.lucro)
+
+        self.R1.grid()
+        self.R2.grid()
+        #self.titulo.grid(row=1)
+        self.nome.grid(row=2)
+        
+        
+        #alterar os commands
+
+    def update(self):
+        print 'update'
+        if self.var.get() == 1:
+            self.lucro.set(self.controle.listar_ano())
+        elif self.var.get() == 2:
+            self.lucro.set(self.controle.listar_mes())
+        print self.controle.listar_pacotes()
+        
         
 class Cadastrar_pacote(tk.Frame):
     def __init__(self, parent, controller, root, controle):
@@ -642,6 +680,7 @@ class Menu_(tk.Frame):
         subMenu.add_command(label='Cadastrar novo cliente', command=lambda : controller.show_frame("Cadastrar_cliente"))
         subMenu.add_command(label='Atualizar dados de um cliente', command=lambda : controller.show_frame("Atualizar_cliente"))
         subMenu.add_command(label='Buscar um cliente', command=lambda : controller.show_frame("Retornar_cliente"))
+        subMenu.add_command(label='Listar vendas de um cliente', command=lambda : controller.show_frame("Listar_venda"))
 
         subMenu2 = tk.Menu(self.menu)
 
@@ -652,7 +691,9 @@ class Menu_(tk.Frame):
         subMenu3 = tk.Menu(self.menu)
         self.menu.add_cascade(label='Vendas', menu=subMenu3)
         subMenu3.add_command(label='Registrar nova venda', command=lambda : controller.show_frame("Cadastrar_venda"))
-        subMenu3.add_command(label='Listar vendas de um cliente', command=lambda : controller.show_frame("Listar_venda"))
+        subMenu3.add_command(label='Lucro anual/mensal', command=lambda : controller.show_frame("Lucro"))
+     
+        
         
         subMenu.add_separator()
         
@@ -686,6 +727,7 @@ class Menu_gerente(tk.Frame):
         subMenu.add_command(label='Cadastrar novo cliente', command=lambda : controller.show_frame("Cadastrar_cliente"))
         subMenu.add_command(label='Atualizar dados de um cliente', command=lambda : controller.show_frame("Atualizar_cliente"))
         subMenu.add_command(label='Buscar um cliente', command=lambda : controller.show_frame("Retornar_cliente"))
+        subMenu.add_command(label='Listar vendas de um cliente', command=lambda : controller.show_frame("Listar_venda"))
 
         subMenu2 = tk.Menu(self.menu)
 
@@ -696,7 +738,8 @@ class Menu_gerente(tk.Frame):
         subMenu3 = tk.Menu(self.menu)
         self.menu.add_cascade(label='Vendas', menu=subMenu3)
         subMenu3.add_command(label='Registrar nova venda', command=lambda : controller.show_frame("Cadastrar_venda"))
-        subMenu3.add_command(label='Listar vendas de um cliente', command=lambda : controller.show_frame("Listar_venda"))
+        subMenu3.add_command(label='Lucro anual/mensal', command=lambda : controller.show_frame("Lucro"))
+        
         
         
         subMenu.add_separator()
