@@ -7,4 +7,4 @@ class Tratamento:
 		self.valor = valor
 
 	def __str__(self):
-                return "Tratamento: " + self.nome + "\tValor: " + str(self.valor)
+                return self.nome + "\tR$ " + str(self.valor)
