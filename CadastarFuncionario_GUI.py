@@ -53,7 +53,13 @@ class Crud_Funcionario:
         self.email_str= StringVar()
         self.entryemail= Entry(self.frame, textvariable= self.email_str, width=50)
         self.entryemail.place(x=50,y=250)
-        
+
+        self.labelsenha = Label(self.frame, text='Senha')
+        self.labelsenha.place(x=0, y=280)
+        self.senha_str = StringVar()
+        self.entrysenha = Entry(self.frame, textvariable=self.senha_str, width=22)
+        self.entrysenha.place(x=50, y=280)
+
         self.button1 = Button(self.frame, text='Salvar', height=1, width=15,command=self.salvar)
         self.button1.place(x=10,y=280)
         self.label_str= StringVar()
@@ -72,7 +78,7 @@ class Crud_Funcionario:
     def salvar(self):
         self.controle = Controle()
         self.controle.cadastrar_funcionario(self.name_str.get(), self.cpf_str.get(), self.endereco_str.get(), self.telefone_str.get(),
-                                            self.dt_nasc_str.get(), self.email_str.get(), self.cargo_str.get(), self.salario_str.get())
+                                            self.dt_nasc_str.get(), self.email_str.get(), self.cargo_str.get(), self.salario_str.get(), self.salario_str.get())
 
         self.lista_func.insert(1, self.controle.listaFuncionarios[0])
         self.name_str.set('')
@@ -83,6 +89,7 @@ class Crud_Funcionario:
         self.salario_str.set('')
         self.cargo_str.set('')
         self.email_str.set('')
+        self.senha_str.set('')
 
     def seleciona(self):
         self.value=str((self.lista_func.get(ACTIVE)))
