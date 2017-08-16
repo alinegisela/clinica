@@ -416,6 +416,8 @@ class Controle:
         self.listaFuncionarios.append(novo_funcionario)
         self.listaLogin.append(novo_login)
 
+        self.salvar_dados()
+
     def inserir_funcionario(self, nome, cpf, end, tel, dt_nasc, email, cargo, salario):
         novo_funcionario = Funcionario(nome, cpf, end, tel, dt_nasc, email, cargo, salario)
         
@@ -428,8 +430,10 @@ class Controle:
             if self.listaFuncionarios[i].cpf == cpf:
                 funcionario = self.listaFuncionarios[i]
                 return funcionario
+
+        print 'ffffff'
             
-    def atualizar_funcionario(self, nome, cpf, end, tel, dt_nasc, email, cargo, salario):
+    def atualizar_funcionario(self, nome, cpf, end, tel, dt_nasc, email, cargo, salario, senha):
         funcionario = self.retornar_funcionario(cpf)
         funcionario.nome = nome
         funcionario.endereco = end
@@ -438,18 +442,30 @@ class Controle:
         funcionario.email = email
         funcionario.cargo = cargo
         funcionario.salario = salario
-        funcionario.senha = senha
 
+        login = self.retornar_login(cpf)
+        login.senha = senha
+    
+        self.salvar_dados()
         
     def deletar_funcionario(self, cpf):
         funcionario = self.retornar_funcionario(cpf)
         self.listaFuncionarios.remove(funcionario)
+
+        self.salvar_dados()
 
     def cadastrar_login(self, usuario, senha):
         
         novo_login = Login(usuario, senha)
         self.listaLogin.append(novo_login)
 
+    def retornar_login(self, usuario):
+        for i in range(len(self.listaLogin)):
+            if self.listaLogin[i].usuario == usuario:
+                return self.listaLogin[i]
+
+        
+        
     def login(self, usuario, senha):
         validar = [False, False]
        

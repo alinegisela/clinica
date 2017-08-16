@@ -12,26 +12,41 @@ class SampleApp(tk.Frame):
         # on top of each other, then the one we want visible
         # will be raised above the others
         container = tk.Frame(janela)
-        container.pack(side="top",  expand=True)
-        container.grid_rowconfigure(0, weight=1)
-        container.grid_columnconfigure(0, weight=1)
+        self.frame= tk.Frame(janela, height=600, width=380)
+        self.frame.place(x=100)
+        #container.pack(side='top', expand=True)
+        container.place(x=100, y=50)
+        container.lift()
+        #container.grid_rowconfigure(0, weight=1)
+        #container.grid_columnconfigure(0, weight=1)
+        self.pack_propagate(0)
 
         janela.title("Clinica Sinta-se Bem")
-        janela.geometry("500x400")
+        janela.geometry("600x600")
+        janela.configure(background='Beige')
+        janela.resizable(0,0)
         #janela.configure(backgr.grid_bg='Beige'
         #self.menu = Menu_(self.root, self)
+        #self.frame= tk.Frame(janela, height=600, width=320)
+        #self.frame.pack()
 
         self.frames = {}
-        for F in (Cadastrar_cliente, StartPage, Atualizar_cliente, Retornar_cliente, Deletar_cliente, Login, Inicio, Cadastrar_venda, Recuperar_pacotes, Inicio_gerente, Cadastrar_pacote, Deletar_pacote, Listar_venda, Lucro):
+        for F in (Cadastrar_cliente,Atualizar_cliente, Retornar_cliente, Deletar_cliente, Login, Inicio, Cadastrar_venda, Recuperar_pacotes, Inicio_gerente, Cadastrar_pacote, Deletar_pacote, Listar_venda, Lucro, Cadastrar_Funcionario,Atualizar_Funcionario,Recuperar_Funcionario, Deletar_Funcionario):
             page_name = F.__name__
             frame = F(parent=container, controller=self, root=self.root, controle=self.controle)
+            frame.height = 900
             self.frames[page_name] = frame
            
 
             # put all of the pages in the same location;
             # the one on the top of the stacking order
             # will be the one that is visible.
+            
             frame.grid(row=0, column=0, sticky="nsew")
+            #frame.grid_rowconfigure(0, weight=1)
+            #frame.grid_columnconfigure(0, weight=1)
+            
+            #self.grid_propagate(0)
 
       
         self.show_frame("Login")
@@ -41,6 +56,7 @@ class SampleApp(tk.Frame):
     def show_frame(self, page_name):
         '''Show a frame for the given page name'''
         frame = self.frames[page_name]
+        frame.height=600
         frame.update()
         frame.tkraise()
     def menu_gerente(self, page_name):
@@ -48,27 +64,6 @@ class SampleApp(tk.Frame):
         frame.updateGerente()
         frame.tkraise()
 
-class StartPage(tk.Frame):
-
-    def __init__(self, parent, controller, root, controle):
-        tk.Frame.__init__(self, parent)
-        self.controller = controller
-        self.root = root
-        self.controle = controle
-        
-        
-        label = tk.Label(self, text="Teste")
-        label.pack(side="top", fill="x", pady=10)
-
-        button1 = tk.Button(self, text="Mostrar cliente",
-                            command=lambda: controller.show_frame("Deletar_cliente"))
-        button2 = tk.Button(self, text="Cadastrar cliente",
-                            command=lambda: controller.show_frame("Atualizar_cliente"))
-        button1.pack()
-        button2.pack()
-
-    def update(self):
-        self.menu = Menu_(self.root, self.controller)
 
 class Cadastrar_cliente(tk.Frame):
 
@@ -131,11 +126,12 @@ class Login(tk.Frame):
         self.controller = controller
         self.root = root
         self.controle = controle
-
+       
         #self.controle = Controle()
 
         root.config(menu=tk.Menu(root))
-        #self.menu = Menu_(self.root, self)
+        
+        self.txt = tk.Label(self, text='Digite seu CPF e sua senha: ')
 
         self.usuario = tk.Label(self, text='Usuario: ')
         self.usuario_str = tk.StringVar()
@@ -145,12 +141,11 @@ class Login(tk.Frame):
         self.senha_str = tk.StringVar()
         self.senha_input = tk.Entry(self, textvariable = self.senha_str)
 
-
-        self.usuario.grid(row=1)
-        self.usuario_input.grid(row=1, column=1)
-        self.senha.grid(row=2)
-        self.senha_input.grid(row=2, column=1)
-        
+        self.txt.grid(row=1)
+        self.usuario.grid(row=2)
+        self.usuario_input.grid(row=2, column=1)
+        self.senha.grid(row=3)
+        self.senha_input.grid(row=3, column=1)
         
         self.b = tk.Button(self, text='Enviar', command=self.acao)
         self.b.grid(row=6, column=1)
@@ -255,8 +250,8 @@ class Retornar_cliente(tk.Frame):
         self.email_input = tk.Label(self, textvariable = self.email)
         
 
-        self.cpfText.grid(row=0)
-        self.cpf_inpt.grid(row=0, column=1)
+        self.cpfText.grid(row=1)
+        self.cpf_inpt.grid(row=1, column=1)
         self.b.grid(row=2, column=1)
         self.nome_input.grid(row=3, column=1)
         self.cpf_input.grid(row=4, column=1)
@@ -373,11 +368,7 @@ class Inicio_gerente(tk.Frame):
     def update(self):
       
         self.menu = Menu_gerente(self.root, self.controller).menu
-        subMenu = tk.Menu(self.menu)
-        self.menu.add_cascade(label='Cliente', menu=subMenu)
-        subMenu.add_command(label='Cadastrar novo cliente', command=lambda : controller.show_frame("Cadastrar_cliente"))
-        subMenu.add_command(label='Atualizar dados de um cliente', command=lambda : controller.show_frame("Atualizar_cliente"))
-        subMenu.add_command(label='Buscar um cliente', command=lambda : controller.show_frame("Retornar_cliente"))
+        
     
 
 #Cadastro de Venda
@@ -730,7 +721,6 @@ class Menu_gerente(tk.Frame):
         subMenu.add_command(label='Listar vendas de um cliente', command=lambda : controller.show_frame("Listar_venda"))
 
         subMenu2 = tk.Menu(self.menu)
-
         self.menu.add_cascade(label='Pacotes', menu=subMenu2)
         subMenu2.add_command(label='Cadastrar novo pacote', command=lambda : controller.show_frame("Cadastrar_pacote"))
         subMenu2.add_command(label='Excluir pacote', command=lambda : controller.show_frame("Deletar_pacote"))
@@ -740,7 +730,12 @@ class Menu_gerente(tk.Frame):
         subMenu3.add_command(label='Registrar nova venda', command=lambda : controller.show_frame("Cadastrar_venda"))
         subMenu3.add_command(label='Lucro anual/mensal', command=lambda : controller.show_frame("Lucro"))
         
-        
+        subMenu4 = tk.Menu(self.menu)
+        self.menu.add_cascade(label='Funcionarios', menu=subMenu4)
+        subMenu4.add_command(label='Cadastrar novo funcionario', command=lambda : controller.show_frame("Cadastrar_Funcionario"))
+        subMenu4.add_command(label='Atualizar dados de um funcionario', command=lambda : controller.show_frame("Atualizar_Funcionario"))
+        subMenu4.add_command(label='Buscar funcionario', command=lambda : controller.show_frame("Recuperar_Funcionario"))
+        subMenu4.add_command(label='Excluir funcionario', command=lambda : controller.show_frame("Deletar_Funcionario"))
         
         subMenu.add_separator()
         subMenu.add_command(label='Sair',command=self.theend)
@@ -752,71 +747,72 @@ class Cadastrar_Funcionario(tk.Frame):
         self.controller = controller
         self.root = root
         self.controle = controle
-        #self.controle = Controle()
+        
+        self.labelname= tk.Label(self, text='Nome')
+        #self.labelname.place(x=0,y=30)
+        self.labelname.grid(row=1)
+        self.name_str= tk.StringVar()
+        self.entryname= tk.Entry(self, textvariable= self.name_str, width=40)
+        self.entryname.grid(row=1, column=1)
 
-        self.labelname= Label(self.frame, text='Nome')
-        self.labelname.place(x=0,y=30)
-        self.name_str= StringVar()
-        self.entryname= Entry(self.frame, textvariable= self.name_str, width=50)
-        self.entryname.place(x=50,y=30)
+        self.labelcpf= tk.Label(self, text='Cpf')
+        self.labelcpf.grid(row=3)
+        self.cpf_str= tk.StringVar()
+        self.entrycpf= tk.Entry(self, textvariable= self.cpf_str, width=40)
+        self.entrycpf.grid(row=3, column=1)
 
-        self.labelcpf= Label(self.frame, text='Cpf')
-        self.labelcpf.place(x=0,y=60)
-        self.cpf_str= StringVar()
-        self.entrycpf= Entry(self.frame, textvariable= self.cpf_str, width=50)
-        self.entrycpf.place(x=50,y=60)
+        self.labelendereco= tk.Label(self, text='Endereco')
+        self.labelendereco.grid(row=4)
+        self.endereco_str= tk.StringVar()
+        self.entryendereco= tk.Entry(self, textvariable= self.endereco_str, width=40)
+        self.entryendereco.grid(row=4, column=1)
 
-        self.labelendereco= Label(self.frame, text='Endereco')
-        self.labelendereco.place(x=0,y=90)
-        self.endereco_str= StringVar()
-        self.entryendereco= Entry(self.frame, textvariable= self.endereco_str, width=50)
-        self.entryendereco.place(x=50,y=90)
+        self.labeltelefone= tk.Label(self, text='Telefone')
+        self.labeltelefone.grid(row=5)
+        self.telefone_str= tk.StringVar()
+        self.entrytelefone= tk.Entry(self, textvariable= self.telefone_str, width=40)
+        self.entrytelefone.grid(row=5, column=1)
 
-        self.labeltelefone= Label(self.frame, text='Telefone')
-        self.labeltelefone.place(x=0,y=120)
-        self.telefone_str= StringVar()
-        self.entrytelefone= Entry(self.frame, textvariable= self.telefone_str, width=22)
-        self.entrytelefone.place(x=50,y=120)
+        self.labeldt_nasc= tk.Label(self, text='dt_nasc')
+        self.labeldt_nasc.grid(row=6)
+        self.dt_nasc_str= tk.StringVar()
+        self.entrydt_nasc= tk.Entry(self, textvariable= self.dt_nasc_str, width=40)
+        self.entrydt_nasc.grid(row=6, column=1)
 
-        self.labeldt_nasc= Label(self.frame, text='dt_nasc')
-        self.labeldt_nasc.place(x=0,y=150)
-        self.dt_nasc_str= StringVar()
-        self.entrydt_nasc= Entry(self.frame, textvariable= self.dt_nasc_str, width=22)
-        self.entrydt_nasc.place(x=50,y=150)
+        self.labelsalario= tk.Label(self, text='salario')
+        self.labelsalario.grid(row=7)
+        self.salario_str= tk.StringVar()
+        self.entrysalario= tk.Entry(self, textvariable= self.salario_str, width=40)
+        self.entrysalario.grid(row=7, column=1)
 
-        self.labelsalario= Label(self.frame, text='salario')
-        self.labelsalario.place(x=0,y=180)
-        self.salario_str= StringVar()
-        self.entrysalario= Entry(self.frame, textvariable= self.salario_str, width=22)
-        self.entrysalario.place(x=50,y=180)
+        self.labelcargo= tk.Label(self, text='cargo')
+        self.labelcargo.grid(row=8)
+        self.cargo_str= tk.StringVar()
+        self.entrycargo= tk.Entry(self, textvariable= self.cargo_str, width=40)
+        self.entrycargo.grid(row=8, column=1)
 
-        self.labelcargo= Label(self.frame, text='cargo')
-        self.labelcargo.place(x=0,y=210)
-        self.cargo_str= StringVar()
-        self.entrycargo= Entry(self.frame, textvariable= self.cargo_str, width=22)
-        self.entrycargo.place(x=50,y=210)
+        self.labelemail= tk.Label(self, text='e-mail')
+        self.labelemail.grid(row=9)
+        self.email_str= tk.StringVar()
+        self.entryemail= tk.Entry(self, textvariable= self.email_str, width=40)
+        self.entryemail.grid(row=9, column=1)
 
-        self.labelemail= Label(self.frame, text='e-mail')
-        self.labelemail.place(x=0,y=250)
-        self.email_str= StringVar()
-        self.entryemail= Entry(self.frame, textvariable= self.email_str, width=50)
-        self.entryemail.place(x=50,y=250)
+        self.labelsenha = tk.Label(self, text='Senha')
+        self.labelsenha.grid(row=10)
+        self.senha_str = tk.StringVar()
+        self.entrysenha = tk.Entry(self, textvariable=self.senha_str, width=40)
+        self.entrysenha.grid(row=10, column=1)
 
-        self.labelsenha = Label(self.frame, text='Senha')
-        self.labelsenha.place(x=0, y=280)
-        self.senha_str = StringVar()
-        self.entrysenha = Entry(self.frame, textvariable=self.senha_str, width=22)
-        self.entrysenha.place(x=50, y=280)
-
-        self.button1 = Button(self.frame, text='Salvar', height=1, width=15,command=self.acao)
-        self.button1.place(x=10,y=280)
-        self.label_str= StringVar()
+        self.button1 = tk.Button(self, text='Salvar', height=1, width=15,command=self.acao)
+        self.button1.grid(row=11, column=1)
+        self.label_str= tk.StringVar()
 
     def acao(self):
-        self.controle = Controle()
+        #self.controle = Controle()
         self.controle.cadastrar_funcionario(self.name_str.get(), self.cpf_str.get(), self.endereco_str.get(), self.telefone_str.get(),
-                                           self.dt_nasc_str.get(), self.email_str.get(), self.cargo_str.get(), self.salario_str.get(), self.salario_str.get())
+                                           self.dt_nasc_str.get(), self.email_str.get(), self.cargo_str.get(), self.salario_str.get(), self.senha_str.get())
 
+        self.controller.show_frame("Inicio_gerente")
         self.name_str.set('')
         self.cpf_str.set('')
         self.endereco_str.set('')
@@ -836,68 +832,70 @@ class Atualizar_Funcionario(tk.Frame):
         self.controle = controle
         #self.controle = Controle()
 
-        self.labelname= Label(self.frame, text='Nome')
-        self.labelname.place(x=0,y=30)
-        self.name_str= StringVar()
-        self.entryname= Entry(self.frame, textvariable= self.name_str, width=50)
-        self.entryname.place(x=50,y=30)
+        self.labelname= tk.Label(self, text='Nome')
+        self.labelname.grid(row=1)
+        self.name_str= tk.StringVar()
+        self.entryname= tk.Entry(self, textvariable= self.name_str, width=40)
+        self.entryname.grid(row=1, column=1)
 
-        self.labelcpf= Label(self.frame, text='Cpf')
-        self.labelcpf.place(x=0,y=60)
-        self.cpf_str= StringVar()
-        self.entrycpf= Entry(self.frame, textvariable= self.cpf_str, width=50)
-        self.entrycpf.place(x=50,y=60)
+        self.labelcpf= tk.Label(self, text='Cpf')
+        self.labelcpf.grid(row=2)
+        self.cpf_str= tk.StringVar()
+        self.entrycpf= tk.Entry(self, textvariable= self.cpf_str, width=40)
+        self.entrycpf.grid(row=2, column=1)
 
-        self.labelendereco= Label(self.frame, text='Endereco')
-        self.labelendereco.place(x=0,y=90)
-        self.endereco_str= StringVar()
-        self.entryendereco= Entry(self.frame, textvariable= self.endereco_str, width=50)
-        self.entryendereco.place(x=50,y=90)
+        self.labelendereco= tk.Label(self, text='Endereco')
+        self.labelendereco.grid(row=3)
+        self.endereco_str= tk.StringVar()
+        self.entryendereco= tk.Entry(self, textvariable= self.endereco_str, width=40)
+        self.entryendereco.grid(row=3, column=1)
 
-        self.labeltelefone= Label(self.frame, text='Telefone')
-        self.labeltelefone.place(x=0,y=120)
-        self.telefone_str= StringVar()
-        self.entrytelefone= Entry(self.frame, textvariable= self.telefone_str, width=22)
-        self.entrytelefone.place(x=50,y=120)
+        self.labeltelefone= tk.Label(self, text='Telefone')
+        self.labeltelefone.grid(row=4)
+        self.telefone_str= tk.StringVar()
+        self.entrytelefone= tk.Entry(self, textvariable= self.telefone_str, width=40)
+        self.entrytelefone.grid(row=4, column=1)
 
-        self.labeldt_nasc= Label(self.frame, text='dt_nasc')
-        self.labeldt_nasc.place(x=0,y=150)
-        self.dt_nasc_str= StringVar()
-        self.entrydt_nasc= Entry(self.frame, textvariable= self.dt_nasc_str, width=22)
-        self.entrydt_nasc.place(x=50,y=150)
+        self.labeldt_nasc= tk.Label(self, text='dt_nasc')
+        self.labeldt_nasc.grid(row=5)
+        self.dt_nasc_str= tk.StringVar()
+        self.entrydt_nasc= tk.Entry(self, textvariable= self.dt_nasc_str, width=40)
+        self.entrydt_nasc.grid(row=5, column=1)
 
-        self.labelsalario= Label(self.frame, text='salario')
-        self.labelsalario.place(x=0,y=180)
-        self.salario_str= StringVar()
-        self.entrysalario= Entry(self.frame, textvariable= self.salario_str, width=22)
-        self.entrysalario.place(x=50,y=180)
+        self.labelsalario= tk.Label(self, text='salario')
+        self.labelsalario.grid(row=6)
+        self.salario_str= tk.StringVar()
+        self.entrysalario= tk.Entry(self, textvariable= self.salario_str, width=40)
+        self.entrysalario.grid(row=6,column=1)
 
-        self.labelcargo= Label(self.frame, text='cargo')
-        self.labelcargo.place(x=0,y=210)
-        self.cargo_str= StringVar()
-        self.entrycargo= Entry(self.frame, textvariable= self.cargo_str, width=22)
-        self.entrycargo.place(x=50,y=210)
+        self.labelcargo= tk.Label(self, text='cargo')
+        self.labelcargo.grid(row=7)
+        self.cargo_str= tk.StringVar()
+        self.entrycargo= tk.Entry(self, textvariable= self.cargo_str, width=40)
+        self.entrycargo.grid(row=7, column=1)
 
-        self.labelemail= Label(self.frame, text='e-mail')
-        self.labelemail.place(x=0,y=250)
-        self.email_str= StringVar()
-        self.entryemail= Entry(self.frame, textvariable= self.email_str, width=50)
-        self.entryemail.place(x=50,y=250)
+        self.labelemail= tk.Label(self, text='e-mail')
+        self.labelemail.grid(row=8)
+        self.email_str= tk.StringVar()
+        self.entryemail= tk.Entry(self, textvariable= self.email_str, width=40)
+        self.entryemail.grid(row=8, column=1)
 
-        self.labelsenha = Label(self.frame, text='Senha')
-        self.labelsenha.place(x=0, y=280)
-        self.senha_str = StringVar()
-        self.entrysenha = Entry(self.frame, textvariable=self.senha_str, width=22)
-        self.entrysenha.place(x=50, y=280)
+        self.labelsenha = tk.Label(self, text='Senha')
+        self.labelsenha.grid(row=9)
+        self.senha_str = tk.StringVar()
+        self.entrysenha = tk.Entry(self, textvariable=self.senha_str, width=40)
+        self.entrysenha.grid(row=9,column=1)
 
-        self.button1 = Button(self.frame, text='Atualizar', height=1, width=15,command=self.acao)
-        self.button1.place(x=10,y=280)
-        self.label_str= StringVar()
+        self.button1 = tk.Button(self, text='Atualizar', height=1, width=15,command=self.acao)
+        self.button1.grid(row=10, column=1)
+        self.label_str= tk.StringVar()
 
     def acao(self):
-        self.controle = Controle()
+        #self.controle = Controle()
         self.controle.atualizar_funcionario(self.name_str.get(), self.cpf_str.get(), self.endereco_str.get(), self.telefone_str.get(),
                                             self.dt_nasc_str.get(), self.email_str.get(), self.cargo_str.get(), self.salario_str.get(), self.senha_str.get())
+
+        self.controller.show_frame('Inicio_gerente')
 
         self.name_str.set('')
         self.cpf_str.set('')
@@ -909,7 +907,7 @@ class Atualizar_Funcionario(tk.Frame):
         self.email_str.set('')
         self.senha_str.set('')
 
-class Reculperar_Funcionario(tk.Frame):
+class Recuperar_Funcionario(tk.Frame):
 
     def __init__(self, parent, controller, root, controle):
         tk.Frame.__init__(self, parent)
@@ -918,76 +916,68 @@ class Reculperar_Funcionario(tk.Frame):
         self.controle = controle
         #self.controle = Controle()
 
-        self.labelname= Label(self.frame, text='Nome')
-        self.labelname.place(x=0,y=30)
-        self.name_str= StringVar()
-        self.entryname= Entry(self.frame, textvariable= self.name_str, width=50)
-        self.entryname.place(x=50,y=30)
+        self.cpfText = tk.Label(self, text='Cpf: ')
+        self.cpf_st = tk.StringVar()
+        self.cpf_inpt = tk.Entry(self, textvariable = self.cpf_st)
+        
+        self.cpfText.grid(row=1)
+        self.cpf_inpt.grid(row=1, column=1)
+        
+        
+        self.b = tk.Button(self, text='OK', command=self.acao)
+        self.b.grid(row=2, column=1)
+        
+        
+        self.name_str= tk.StringVar()
+        self.entryname= tk.Label(self, textvariable= self.name_str, width=50)
+        self.entryname.grid(row=3, column=1)
 
-        self.labelcpf= Label(self.frame, text='Cpf')
-        self.labelcpf.place(x=0,y=60)
-        self.cpf_str= StringVar()
-        self.entrycpf= Entry(self.frame, textvariable= self.cpf_str, width=50)
-        self.entrycpf.place(x=50,y=60)
+        self.cpf_str= tk.StringVar()
+        self.entrycpf= tk.Label(self, textvariable= self.cpf_str, width=50)
+        self.entrycpf.grid(row=4,column=1)
 
-        self.button1 = Button(self.frame, text='Buscar', height=1, width=15,command=self.acao)
-        self.button1.place(x=120,y=60)
-        self.label_str= StringVar()
+        self.endereco_str= tk.StringVar()
+        self.entryendereco= tk.Label(self, textvariable= self.endereco_str, width=50)
+        self.entryendereco.grid(row=5,column=1)
 
-        self.labelendereco= Label(self.frame, text='Endereco')
-        self.labelendereco.place(x=0,y=90)
-        self.endereco_str= StringVar()
-        self.entryendereco= Entry(self.frame, textvariable= self.endereco_str, width=50)
-        self.entryendereco.place(x=50,y=90)
+      
+        self.telefone_str= tk.StringVar()
+        self.entrytelefone= tk.Label(self, textvariable= self.telefone_str, width=22)
+        self.entrytelefone.grid(row=6,column=1)
 
-        self.labeltelefone= Label(self.frame, text='Telefone')
-        self.labeltelefone.place(x=0,y=120)
-        self.telefone_str= StringVar()
-        self.entrytelefone= Entry(self.frame, textvariable= self.telefone_str, width=22)
-        self.entrytelefone.place(x=50,y=120)
+      
+        self.dt_nasc_str= tk.StringVar()
+        self.entrydt_nasc= tk.Label(self, textvariable= self.dt_nasc_str, width=22)
+        self.entrydt_nasc.grid(row=7,column=1)
 
-        self.labeldt_nasc= Label(self.frame, text='dt_nasc')
-        self.labeldt_nasc.place(x=0,y=150)
-        self.dt_nasc_str= StringVar()
-        self.entrydt_nasc= Entry(self.frame, textvariable= self.dt_nasc_str, width=22)
-        self.entrydt_nasc.place(x=50,y=150)
+     
+        self.salario_str= tk.StringVar()
+        self.entrysalario= tk.Label(self, textvariable= self.salario_str, width=22)
+        self.entrysalario.grid(row=8,column=1)
 
-        self.labelsalario= Label(self.frame, text='salario')
-        self.labelsalario.place(x=0,y=180)
-        self.salario_str= StringVar()
-        self.entrysalario= Entry(self.frame, textvariable= self.salario_str, width=22)
-        self.entrysalario.place(x=50,y=180)
+     
+        self.cargo_str= tk.StringVar()
+        self.entrycargo= tk.Label(self, textvariable= self.cargo_str, width=22)
+        self.entrycargo.grid(row=9,column=1)
 
-        self.labelcargo= Label(self.frame, text='cargo')
-        self.labelcargo.place(x=0,y=210)
-        self.cargo_str= StringVar()
-        self.entrycargo= Entry(self.frame, textvariable= self.cargo_str, width=22)
-        self.entrycargo.place(x=50,y=210)
+      
+        self.email_str= tk.StringVar()
+        self.entryemail= tk.Label(self, textvariable= self.email_str, width=50)
+        self.entryemail.grid(row=10,column=1)
 
-        self.labelemail= Label(self.frame, text='e-mail')
-        self.labelemail.place(x=0,y=250)
-        self.email_str= StringVar()
-        self.entryemail= Entry(self.frame, textvariable= self.email_str, width=50)
-        self.entryemail.place(x=50,y=250)
-
-        self.labelsenha = Label(self.frame, text='Senha')
-        self.labelsenha.place(x=0, y=280)
-        self.senha_str = StringVar()
-        self.entrysenha = Entry(self.frame, textvariable=self.senha_str, width=22)
-        self.entrysenha.place(x=50, y=280)
 
     def acao(self):
-        self.funcionario = self.controle.retornar_funcionario(self.cpf_str.get())
+        print 'String aki o ' + self.cpf_str.get()
+        self.funcionario = self.controle.retornar_funcionario(self.cpf_st.get())
 
-        self.name_str.set(self.funcionario.nome)
-        self.cpf_str.set(self.funcionario.cpf)
-        self.endereco_str.set(self.funcionario.endereco)
-        self.telefone_str.set(self.funcionario.telefone)
-        self.dt_nasc_str.set(self.funcionario.dt_nasc)
-        self.email_str.set(self.funcionario.email)
-        self.cargo_str.set(self.funcionario.cargo)
-        self.salario_str.set(self.funcionario.salario)
-        self.senha_str.set(self.funcionario.senha)
+        self.name_str.set("Nome: " + self.funcionario.nome)
+        self.cpf_str.set("CPF: "+self.funcionario.cpf)
+        self.endereco_str.set("Endereco: "+self.funcionario.endereco)
+        self.telefone_str.set("Telefone: "+self.funcionario.telefone)
+        self.dt_nasc_str.set("Data de nascimento: "+self.funcionario.dt_nasc)
+        self.email_str.set("Email: "+self.funcionario.email)
+        self.cargo_str.set("Cargo: "+self.funcionario.cargo)
+        self.salario_str.set("Salario: "+self.funcionario.salario)
 
 class Deletar_Funcionario(tk.Frame):
 
@@ -1019,7 +1009,7 @@ class Deletar_Funcionario(tk.Frame):
     def acao(self):
        
         self.controle.deletar_funcionario(self.cpf_str.get() )
-
+        self.controller.show_frame("Inicio_gerente")
 
 
         
