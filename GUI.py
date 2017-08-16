@@ -139,7 +139,7 @@ class Login(tk.Frame):
 
         self.senha = tk.Label(self, text='Senha: ')
         self.senha_str = tk.StringVar()
-        self.senha_input = tk.Entry(self, textvariable = self.senha_str)
+        self.senha_input = tk.Entry(self, textvariable = self.senha_str, show='*')
 
         self.txt.grid(row=1)
         self.usuario.grid(row=2)
@@ -800,7 +800,7 @@ class Cadastrar_Funcionario(tk.Frame):
         self.labelsenha = tk.Label(self, text='Senha')
         self.labelsenha.grid(row=10)
         self.senha_str = tk.StringVar()
-        self.entrysenha = tk.Entry(self, textvariable=self.senha_str, width=40)
+        self.entrysenha = tk.Entry(self, textvariable=self.senha_str, width=40, show='*')
         self.entrysenha.grid(row=10, column=1)
 
         self.button1 = tk.Button(self, text='Salvar', height=1, width=15,command=self.acao)
@@ -883,7 +883,7 @@ class Atualizar_Funcionario(tk.Frame):
         self.labelsenha = tk.Label(self, text='Senha')
         self.labelsenha.grid(row=9)
         self.senha_str = tk.StringVar()
-        self.entrysenha = tk.Entry(self, textvariable=self.senha_str, width=40)
+        self.entrysenha = tk.Entry(self, textvariable=self.senha_str, width=40, show='*')
         self.entrysenha.grid(row=9,column=1)
 
         self.button1 = tk.Button(self, text='Atualizar', height=1, width=15,command=self.acao)
