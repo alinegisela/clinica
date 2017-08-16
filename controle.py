@@ -438,6 +438,8 @@ class Controle:
         funcionario.email = email
         funcionario.cargo = cargo
         funcionario.salario = salario
+        funcionario.senha = senha
+
         
     def deletar_funcionario(self, cpf):
         funcionario = self.retornar_funcionario(cpf)
