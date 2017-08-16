@@ -12,7 +12,7 @@ class SampleApp(tk.Frame):
         # on top of each other, then the one we want visible
         # will be raised above the others
         container = tk.Frame(janela)
-        self.frame= tk.Frame(janela, height=600, width=380)
+        self.frame= tk.Frame(janela, height=600, width=400)
         self.frame.place(x=100)
         #container.pack(side='top', expand=True)
         container.place(x=100, y=50)
@@ -74,7 +74,8 @@ class Cadastrar_cliente(tk.Frame):
         self.controle = controle
         #self.controle = Controle()
 
-        
+        self.t = tk.Label(self, text='Insira os dados do cliente')
+        self.t.grid()
 
         self.nome = tk.Label(self, text='Nome')
         self.nome_str = tk.StringVar()
@@ -379,14 +380,15 @@ class Cadastrar_venda(tk.Frame):
         self.root = root
         self.controle = controle
 
+        self.t = tk.Label(self, text='Escolha o pacote e digite o CPF do cliente')
+        self.t.grid()
+
         self.cpf = tk.Label(self, text='Cpf do cliente: ')
         self.cpf_str = tk.StringVar()
         self.cpf_input = tk.Entry(self, textvariable = self.cpf_str)
 
         #mudar para listbox
-        self.pacote = tk.Label(self, text='Codigo do pacote')
-        self.pacote_str = tk.StringVar()
-        self.pacote_input = tk.Entry(self, textvariable = self.pacote_str)
+        
 
         self.lb_opcao = tk.StringVar()
         self.lb = tk.Listbox(self, listvariable=self.lb_opcao, height=4, selectmode=tk.SINGLE)
@@ -403,8 +405,7 @@ class Cadastrar_venda(tk.Frame):
         
         self.cpf.grid(row=1)
         self.cpf_input.grid(row=1, column=1)
-        self.pacote.grid(row=2)
-        self.pacote_input.grid(row=2, column=1)
+        
  
         
         self.b = tk.Button(self, text='Registrar venda', command=self.acao)
@@ -514,8 +515,8 @@ class Cadastrar_pacote(tk.Frame):
         self.root = root
         self.controle = controle
 
-        #self.controle = Controle()
-
+        self.t = tk.Label(self, text='Escolha os tratamentos do pacote: ')
+        self.t.grid()
 
         #mudar para listbox
         self.lb_opcao = tk.StringVar()
