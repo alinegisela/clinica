@@ -1,5 +1,6 @@
 import Tkinter as tk
 from controle import Controle
+from tkMessageBox import *
 
 class SampleApp(tk.Frame):
 
@@ -8,27 +9,21 @@ class SampleApp(tk.Frame):
         self.root  = janela
         self.controle = Controle()
 
-        # the container is where we'll stack a bunch of frames
-        # on top of each other, then the one we want visible
-        # will be raised above the others
+        
         container = tk.Frame(janela)
         self.frame= tk.Frame(janela, height=600, width=400)
         self.frame.place(x=100)
-        #container.pack(side='top', expand=True)
+        
         container.place(x=100, y=50)
         container.lift()
-        #container.grid_rowconfigure(0, weight=1)
-        #container.grid_columnconfigure(0, weight=1)
+        
         self.pack_propagate(0)
 
         janela.title("Clinica Sinta-se Bem")
         janela.geometry("600x600")
         janela.configure(background='Beige')
         janela.resizable(0,0)
-        #janela.configure(backgr.grid_bg='Beige'
-        #self.menu = Menu_(self.root, self)
-        #self.frame= tk.Frame(janela, height=600, width=320)
-        #self.frame.pack()
+        
 
         self.frames = {}
         for F in (Cadastrar_cliente,Atualizar_cliente, Retornar_cliente, Deletar_cliente, Login, Inicio, Cadastrar_venda, Recuperar_pacotes, Inicio_gerente, Cadastrar_pacote, Deletar_pacote, Listar_venda, Lucro, Cadastrar_Funcionario,Atualizar_Funcionario,Recuperar_Funcionario, Deletar_Funcionario):
@@ -38,15 +33,10 @@ class SampleApp(tk.Frame):
             self.frames[page_name] = frame
            
 
-            # put all of the pages in the same location;
-            # the one on the top of the stacking order
-            # will be the one that is visible.
+            # frames no mesmo lugar, o 0 e o que aparece
             
             frame.grid(row=0, column=0, sticky="nsew")
-            #frame.grid_rowconfigure(0, weight=1)
-            #frame.grid_columnconfigure(0, weight=1)
             
-            #self.grid_propagate(0)
 
       
         self.show_frame("Login")
@@ -117,7 +107,7 @@ class Cadastrar_cliente(tk.Frame):
         
     def acao(self):
         self.controle.cadastrar_cliente(self.nome_str.get(), self.cpf_str.get(), self.endereco_str.get(), self.telefone_str.get(), self.email_str.get() )
-        self.controller.show_frame("Inicio")
+        self.controller.show_frame("Retornar_cliente")
 
 
 class Login(tk.Frame):
@@ -215,7 +205,7 @@ class Atualizar_cliente(tk.Frame):
         print self.controle.listaClientes[0]
         self.controle.atualizar_cliente(self.nome_str.get(), self.cpf_str.get(), self.endereco_str.get(), self.telefone_str.get(), self.email_str.get() )
         print self.controle.listaClientes[0]
-        self.controller.show_frame("Inicio")
+        self.controller.show_frame("Retornar_cliente")
 
 global cpf
 cpf = 'a'
@@ -263,13 +253,19 @@ class Retornar_cliente(tk.Frame):
         
         
     def buscar(self):
-        self.cliente = self.controle.retornar_cliente(self.cpf_str.get())
-       
-        self.nome.set("Nome: " + self.cliente.nome)
-        self.cpf.set("Cpf: " + self.cliente.cpf)
-        self.endereco.set("Endereco: " + self.cliente.endereco)
-        self.telefone.set("Telefone: " + self.cliente.telefone)
-        self.email.set("Email: " + self.cliente.email)
+        try:
+            self.cliente = self.controle.retornar_cliente(self.cpf_str.get())
+
+            self.nome.set("Nome: " + self.cliente.nome)
+            self.cpf.set("Cpf: " + self.cliente.cpf)
+            self.endereco.set("Endereco: " + self.cliente.endereco)
+            self.telefone.set("Telefone: " + self.cliente.telefone)
+            self.email.set("Email: " + self.cliente.email)
+            
+        except:
+            showinfo("Erro", "Cpf invalido, Tente novamente")
+        
+        
 
 class Deletar_cliente(tk.Frame):
 
@@ -416,7 +412,7 @@ class Cadastrar_venda(tk.Frame):
     def acao(self):
         indice = self.lb.curselection()
         self.controle.cadastrar_venda(self.cpf_str.get(), indice[0])
-        self.controller.show_frame("Inicio")
+        self.controller.show_frame("Listar_venda")
 
     def inserir_lb(self, tamanho):
         for i in range(tamanho):
@@ -548,7 +544,7 @@ class Cadastrar_pacote(tk.Frame):
         print 'aaaa'
         self.controle.cadastrar_pacote(total, trat_selec)
         print 'bbb'
-        self.controller.show_frame("Inicio")
+        self.controller.show_frame("Deletar_pacote")
 
 
 
@@ -639,7 +635,7 @@ class Deletar_pacote(tk.Frame):
             trat_selec.append(lista[i])
             
         self.controle.deletar_pacote(trat_selec)
-        self.controller.show_frame("Inicio")
+        self.controller.show_frame("Cadastrar_pacote")
         
 
   
@@ -687,9 +683,7 @@ class Menu_(tk.Frame):
      
         
         
-        subMenu.add_separator()
-        
-        subMenu.add_command(label='Sair',command=self.theend)
+     
 
 class Menu_gerente(tk.Frame):
   
@@ -738,9 +732,6 @@ class Menu_gerente(tk.Frame):
         subMenu4.add_command(label='Buscar funcionario', command=lambda : controller.show_frame("Recuperar_Funcionario"))
         subMenu4.add_command(label='Excluir funcionario', command=lambda : controller.show_frame("Deletar_Funcionario"))
         
-        subMenu.add_separator()
-        subMenu.add_command(label='Sair',command=self.theend)
-
 class Cadastrar_Funcionario(tk.Frame):
 
     def __init__(self, parent, controller, root, controle):
@@ -968,17 +959,21 @@ class Recuperar_Funcionario(tk.Frame):
 
 
     def acao(self):
-        print 'String aki o ' + self.cpf_str.get()
-        self.funcionario = self.controle.retornar_funcionario(self.cpf_st.get())
+        try:
+            print 'String aki o ' + self.cpf_str.get()
+            self.funcionario = self.controle.retornar_funcionario(self.cpf_st.get())
 
-        self.name_str.set("Nome: " + self.funcionario.nome)
-        self.cpf_str.set("CPF: "+self.funcionario.cpf)
-        self.endereco_str.set("Endereco: "+self.funcionario.endereco)
-        self.telefone_str.set("Telefone: "+self.funcionario.telefone)
-        self.dt_nasc_str.set("Data de nascimento: "+self.funcionario.dt_nasc)
-        self.email_str.set("Email: "+self.funcionario.email)
-        self.cargo_str.set("Cargo: "+self.funcionario.cargo)
-        self.salario_str.set("Salario: "+self.funcionario.salario)
+            self.name_str.set("Nome: " + self.funcionario.nome)
+            self.cpf_str.set("CPF: "+self.funcionario.cpf)
+            self.endereco_str.set("Endereco: "+self.funcionario.endereco)
+            self.telefone_str.set("Telefone: "+self.funcionario.telefone)
+            self.dt_nasc_str.set("Data de nascimento: "+self.funcionario.dt_nasc)
+            self.email_str.set("Email: "+self.funcionario.email)
+            self.cargo_str.set("Cargo: "+self.funcionario.cargo)
+            self.salario_str.set("Salario: "+self.funcionario.salario)
+            
+        except:
+            showinfo("Erro", "Cpf invalido, Tente novamente")
 
 class Deletar_Funcionario(tk.Frame):
 

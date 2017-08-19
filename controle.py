@@ -8,6 +8,9 @@ from login import Login
 from datetime import *
 from random import randint
 
+class busca_cpf_Exception(Exception):
+    pass 
+
 class Controle:
 
     def __init__(self):
@@ -241,6 +244,8 @@ class Controle:
             if self.listaClientes[i].cpf == cpf:
                 cliente = self.listaClientes[i]
                 return cliente
+
+        raise NameError(busca_cpf_Exception)
             
     def atualizar_cliente(self, nome, cpf, end, tel, email):
         cliente = self.retornar_cliente(cpf)
@@ -430,6 +435,8 @@ class Controle:
             if self.listaFuncionarios[i].cpf == cpf:
                 funcionario = self.listaFuncionarios[i]
                 return funcionario
+
+        raise NameError(busca_cpf_Exception)
 
         print 'ffffff'
             
