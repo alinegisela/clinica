@@ -24,7 +24,6 @@ class Controle:
         self.carregar_dados()
 
     def carregar_dados(self):
-        print 'iniciando'
         
         #as classes com composicao e listas, como ler?
         handleClientes = open("dados\\clientes.txt", "r")
@@ -86,13 +85,13 @@ class Controle:
         handleVendas.close()
         handlePacotes.close()
         handleLogin.close()
-        print len(self.listaVendas)
+        
 
         self.salvar_dados()
     
         
     def salvar_dados(self):
-        print 'salvando dados'
+        
         #as classes com composicao e listas, como armazenar?
         handleClientes = open("dados\\clientes.txt", "w")
         handleFuncionarios = open("dados\\funcionarios.txt", "w")
@@ -125,11 +124,11 @@ class Controle:
             c = self.listaVendas[i]
             venda_string += str(c.id)+", " + str(c.cliente.cpf) + ", " + str(c.pacote.id) + ", "+ str(c.data) 
             venda_string += "\n"
-        print venda_string
+        
 
         #AQUI
         pacote_string = ""
-        print len(self.listaPacotes)
+        
         for i in range(len(self.listaPacotes)):
             
             c = self.listaPacotes[i]
@@ -191,8 +190,7 @@ class Controle:
         novo_pacote = Pacote( id,total, lista_Tratamento)
         self.listaPacotes.append(novo_pacote)
 
-        for i in range(len(self.listaPacotes)):
-            print self.listaPacotes[i]
+        
 
     def cadastrar_pacote(self,total, lista_pos):
        
@@ -212,12 +210,12 @@ class Controle:
         self.listaPacotes.append(novo_pacote)
         self.salvar_dados()
 
-        print self.listaPacotes[len(self.listaPacotes)-1]
+        
 
     def retornar_pacote(self, id):
         
         for i in range(len(self.listaPacotes)):
-            print 'IDS DA LISTAAA ' +str(self.listaPacotes[i].id)
+           
             if self.listaPacotes[i].id == id:
                 pacote = self.listaPacotes[i]
                 return pacote
@@ -293,13 +291,12 @@ class Controle:
         nova_venda = Venda(idd, self.retornar_cliente(cpf_cliente), self.retornar_pacote(id_pac), data)
         
         self.listaVendas.append(nova_venda)
-        print'vendaaaaaaaaaaaaaa'+ str(nova_venda.id)
-        print'vendaaaaaaaaaaaaaa'+self.listaVendas[0].cliente.__str__()
+        
         self.salvar_dados()
 
 
     def inserir_venda(self, id, cpf_cliente, id_pacote, data):
-        print 'ID PACOTE ' + str(id_pacote)
+        
         if self.retornar_pacote(id_pacote) != False:
             nova_venda = Venda(id, self.retornar_cliente(cpf_cliente), self.retornar_pacote(id_pacote), data)
         
@@ -313,13 +310,13 @@ class Controle:
         for i in range(len(pacotes_lucro)-1, -1, -1):
             pacotes += "Pacote "+str(len(pacotes_lucro)-i)+"\n" 
             pacotes += pacotes_lucro[i].__str__() + "\n\n"
-            print 'Listando os pacotes:\t' + pacotes_lucro[i].__str__()+"\n\n"
+            
         return pacotes
 
     def listar_pacotes_lucro(self):
         #sorted: organiza lista em ordem crescente pelo atributo total
         pacotes_lucro = sorted(self.listaPacotes, key=lambda pacote: pacote.total)
-        print "socorro deus "+ pacotes_lucro[0].__str__()
+        
         return pacotes_lucro
     
     def listar_tratamentos(self):
@@ -329,7 +326,7 @@ class Controle:
         pacotes = ""
         for i in range(len(pacotes_lucro)-1, -1, -1):
             pacotes += pacotes_lucro[i].__str__() + "\n\n"
-        print pacotes
+        
         return pacotes
 
     def retornar_tratamentos(self):
@@ -380,7 +377,7 @@ class Controle:
                     else:
                         mes = str(j+1)
                     lucro_str+= mes+"/"+str(i+dt_inicial.year)+" - R$ "+str(lucro[i][j])+"\n"
-        print lucro_str
+        
         for i in range(len(vendas)):
             vendas[i].data = datetime.strftime(vendas[i].data, '%d/%m/%y')
         return lucro_str
@@ -407,7 +404,7 @@ class Controle:
         for i in range(qtd_ano):
             if lucro[i]!= 0:
                 lucro_str+= str(i+dt_inicial.year)+" - R$ "+str(lucro[i])+"\n"
-        print lucro_str
+        
         for i in range(len(vendas)):
             vendas[i].data = datetime.strftime(vendas[i].data, '%d/%m/%y')
         return lucro_str
@@ -439,6 +436,7 @@ class Controle:
         raise NameError(busca_cpf_Exception)
 
         print 'ffffff'
+
             
     def atualizar_funcionario(self, nome, cpf, end, tel, dt_nasc, email, cargo, salario, senha):
         funcionario = self.retornar_funcionario(cpf)
@@ -494,7 +492,7 @@ class Controle:
                         validar[1] = True
                     return validar
         
-        print validar
+        
         return validar
 
     
